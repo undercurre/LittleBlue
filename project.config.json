@@ -1,13 +1,31 @@
 {
-  "miniprogramRoot": "./dist",
-  "projectname": "Taro3",
-  "description": "Taro3",
-  "appid": "",
-  "setting": {
-    "urlCheck": false,
-    "es6": false,
-    "postcss": false,
-    "minified": false
-  },
-  "compileType": "miniprogram"
+    "miniprogramRoot": "dist/",
+    "projectname": "Taro3",
+    "description": "Taro3",
+    "appid": "wxc9c875aa99bcdc13",
+    "setting": {
+        "urlCheck": false,
+        "es6": false,
+        "postcss": false,
+        "minified": true,
+        "babelSetting": {
+            "ignore": [],
+            "disablePlugins": [],
+            "outputPath": ""
+        },
+        "minifyWXSS": false,
+        "minifyWXML": false
+    },
+    "compileType": "miniprogram",
+    "libVersion": "2.27.0",
+    "srcMiniprogramRoot": "dist/",
+    "packOptions": {
+        "ignore": [],
+        "include": []
+    },
+    "condition": {},
+    "editorSetting": {
+        "tabIndent": "insertSpaces",
+        "tabSize": 4
+    }
 }

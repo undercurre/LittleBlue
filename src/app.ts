@@ -18,9 +18,6 @@ function setupApp() {
 
   /** 挂载store */
   setupStore(App);
-
-  /** 订阅主题 */
-  // subscribeTheme();
 }
 
 setupApp();
