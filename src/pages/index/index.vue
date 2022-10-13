@@ -50,7 +50,7 @@
 			</div>
 		</div>
     <div class="box-shadow fixed w-375px h-60px bg-white bottom-0 flex items-center">
-      <div class="flex flex-1 justify-center items-center">
+      <div class="flex flex-1 justify-center items-center" @click="handleToB">
         <img :src="guanyu" alt="" style="width: 42rpx; height: 42rpx" />
         <span class="ml-9px">关于我们</span>
       </div>
