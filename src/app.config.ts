@@ -3,6 +3,7 @@ export default defineAppConfig({
   window: {
     backgroundColor: '#fff',
     backgroundTextStyle: 'light',
+    navigationStyle: 'custom',
     navigationBarBackgroundColor: '#fff',
     navigationBarTitleText: 'Taro3',
     navigationBarTextStyle: 'black'

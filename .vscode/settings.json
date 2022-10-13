@@ -62,7 +62,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode"
   },
   "[json]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode"
+    "editor.defaultFormatter": "HookyQR.beautify"
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
