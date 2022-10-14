@@ -1,26 +1,91 @@
 <template>
   <div class="flex items-center flex-col">
-    <div class="mt-52rpx mb-64rpx mx-42rpx">
-      <p style="font-size: 26rpx; line-height: 46rpx; letter-spacing: 0.1em; margin-bottom: 64rpx; color: #333333">
-        公司倡导“率真存厚、立志有恒,奋斗为本、成就客户;创造分享、共同成长”的经营理念，是您值得信赖的专家伙伴。
-      </p>
-      <p style="font-size: 26rpx; line-height: 46rpx; letter-spacing: 0.1em; margin-bottom: 64rpx; color: #333333">
-        中软国际在服务财富500强企业及大中型客户的近二十年里，在电信、政府、制造、金融公司倡导：率真存厚、立志有恒，奋斗为本、成就客户;创造分享、共同成长的经营理念，是您值得信赖的专家伙伴。
-      </p>
-      <p style="font-size: 26rpx; line-height: 46rpx; letter-spacing: 0.1em; color: #333333">
-        中软国际在服务财富500强企业及大中型客户的近二十年里，在电信、政府、制造、金融。
-      </p>
+    <div v-for="item in bluetoothList" :key="item.name" class="w-670rpx mt-58rpx">
+      <div class="flex justify-between">
+        <div class="title">{{ item.name }}</div>
+        <div class="buttom-text" :style="{ color: connectUUID === item.uuid ? '#00C777' : '#000' }">
+          {{ connectUUID === item.uuid ? '已连接' : '未连接' }}
+        </div>
+      </div>
+      <div class="flex justify-between mt-24rpx">
+        <div class="info-text">信号强度：</div>
+        <div class="info-text">{{ item.signalStrength }}</div>
+      </div>
+      <div class="flex justify-between mt-24rpx">
+        <div class="info-text">UUID：</div>
+        <div class="info-text">{{ item.uuid }}</div>
+      </div>
+      <div class="flex justify-between mt-24rpx">
+        <div class="info-text">SERVICE数量：</div>
+        <div class="info-text">{{ item.serviceNum }}</div>
+      </div>
+      <div class="w-670rpx h-1rpx mt-40rpx bg-[#E7E7E7]"></div>
     </div>
-    <img :src="bg" style="width: 650rpx; height: 390rpx; border-radius: 20rpx" />
   </div>
 </template>
 <script lang="ts" setup>
-import bg from '../../assets/images/bg.png';
+import { ref } from 'vue';
 definePageConfig({
   navigationBarTitleText: '蓝牙连接',
-  enablePullDownRefresh: true,
+  navigationStyle: 'default',
   backgroundTextStyle: 'dark'
 });
+
+const connectUUID = ref('1231231231231');
+
+const bluetoothList = ref<
+  {
+    name: string;
+    uuid: string;
+    signalStrength: number;
+    serviceNum: number;
+  }[]
+>([
+  {
+    name: 'xiangfen 001',
+    uuid: '1231231231231',
+    signalStrength: 10,
+    serviceNum: 1
+  },
+  {
+    name: 'xiangfen 002',
+    uuid: '1231231231232',
+    signalStrength: 10,
+    serviceNum: 1
+  },
+  {
+    name: 'xiangfen 003',
+    uuid: '1231231231233',
+    signalStrength: 10,
+    serviceNum: 1
+  }
+]);
 </script>
 
-<style lang="scss"></style>
+<style lang="scss">
+.title {
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 700;
+  font-size: 30rpx;
+  line-height: 42rpx;
+}
+
+.buttom-text {
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 24rpx;
+  line-height: 34rpx;
+  color: #000000;
+}
+
+.info-text {
+  font-family: 'PingFang SC';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 26rpx;
+  line-height: 36rpx;
+  color: #000000;
+}
+</style>

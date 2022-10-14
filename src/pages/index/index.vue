@@ -3,7 +3,7 @@
   <img :src="bg" style="position: fixed; width: 750rpx; height: 372rpx; top: 0; z-index: -100" />
   <div class="flex flex-col items-center">
     <div class="relative mt-108rpx w-750rpx h-48rpx flex items-center">
-      <div class="flex items-center ml-40rpx text-24rpx text-white">
+      <div class="flex items-center ml-40rpx text-24rpx text-white" @click="handleToBluetooth">
         <img :src="unconnect" style="width: 48rpx; height: 40rpx" />
         未连接
       </div>
@@ -20,7 +20,16 @@
         </div>
         香氛浓度
       </div>
-      <div>滑块</div>
+      <div class="w-622rpx h-80rpx mt-16rpx relative rounded-20rpx slider-bg">
+        <div class="w-2rpx h-40rpx rounded-16rpx bg-light-700 absolute left-168rpx top-20rpx"></div>
+        <div class="w-2rpx h-40rpx rounded-16rpx bg-light-700 absolute left-310rpx top-20rpx"></div>
+        <div class="w-2rpx h-40rpx rounded-16rpx bg-light-700 absolute left-452rpx top-20rpx"></div>
+        <div class="slider-block">
+          <div class="w-8rpx h-32rpx absolute right-16rpx top-24rpx bg-white rounded-16rpx"></div>
+        </div>
+        <div class="absolute left-58rpx top-23rpx white-text" style="font-size: 24rpx">淡香</div>
+        <div class="absolute left-357rpx top-23rpx white-text" style="font-size: 24rpx">清香</div>
+      </div>
     </div>
     <div class="mt-40rpx p-24rpx rounded-20rpx bg-white w-670rpx relative box-border">
       <div class="absolute right-50rpx top-36rpx">
@@ -34,7 +43,6 @@
       </div>
       <div class="mt-32rpx">
         <div class="relative">
-          <div class="white-text absolute top-8rpx left-24rpx">香型A</div>
           <nut-progress
             percentage="100"
             status="active"
@@ -43,9 +51,9 @@
             stroke-color="linear-gradient(270deg, #038FE5 0%, rgba(0, 142, 229, 0.4) 100%)"
           >
           </nut-progress>
+          <div class="white-text absolute top-6rpx left-24rpx">香型A</div>
         </div>
         <div class="mt-16rpx relative">
-          <div class="white-text absolute top-8rpx left-24rpx">香型B</div>
           <nut-progress
             percentage="75"
             status="active"
@@ -54,9 +62,9 @@
             stroke-color="linear-gradient(270deg, #038FE5 0%, rgba(0, 142, 229, 0.4) 100%)"
           >
           </nut-progress>
+          <div class="white-text absolute top-6rpx left-24rpx">香型B</div>
         </div>
         <div class="mt-16rpx relative">
-          <div class="white-text absolute top-8rpx left-24rpx">香型C</div>
           <nut-progress
             percentage="25"
             status="active"
@@ -65,6 +73,7 @@
             stroke-color="linear-gradient(270deg, #038FE5 0%, rgba(0, 142, 229, 0.4) 100%)"
           >
           </nut-progress>
+          <div class="white-text absolute top-6rpx left-24rpx">香型C</div>
         </div>
       </div>
     </div>
@@ -165,7 +174,7 @@
         <span class="ml-9px">关于我们</span>
       </div>
       <div class="w-2px h-32rpx bg-black rounded-2px"></div>
-      <div class="flex flex-1 justify-center items-center" @click="handleToBluetooth">
+      <div class="flex flex-1 justify-center items-center">
         <img :src="lianxi" style="width: 42rpx; height: 42rpx" />
         <span class="ml-9px">联系方式</span>
       </div>
@@ -224,9 +233,22 @@ span {
 }
 
 .white-text {
-  font-style: normal;
   font-weight: 500;
   font-size: 20rpx;
   color: #ffffff;
+}
+
+.slider-bg {
+  background: linear-gradient(270deg, #008ee5 0%, rgba(0, 142, 229, 0.4) 100%);
+}
+
+.slider-block {
+  position: absolute;
+  width: 155rpx;
+  height: 80rpx;
+  left: 0;
+  top: 0;
+  border-radius: 20rpx;
+  background: linear-gradient(180deg, #85cffd 0%, #c2e2f5 100%);
 }
 </style>
