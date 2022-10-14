@@ -86,7 +86,7 @@
           >
             <img :src="kaiguan" style="width: 42rpx; height: 42rpx" />
           </div>
-          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" />
+          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" @change="kaiguanChange" />
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
       </div>
@@ -104,18 +104,21 @@
           <div
             class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
             style="font-size: 22rpx; color: #ffffff"
+						@click="qiehuanHandler(1)"
           >
             香氛A
           </div>
           <div
             class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
             style="font-size: 22rpx; color: #ffffff"
+						@click="qiehuanHandler(2)"
           >
             香氛B
           </div>
           <div
             class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx"
             style="font-size: 22rpx; color: #ffffff"
+						@click="qiehuanHandler(3)"
           >
             香氛C
           </div>
@@ -131,7 +134,7 @@
           >
             <img :src="denglizi" style="width: 42rpx; height: 42rpx" />
           </div>
-          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" />
+          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" @change="dengliziChange" />
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
       </div>
@@ -155,12 +158,14 @@
           <div
             class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
             style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
+						@click="meigeHandler"
           >
             每隔一秒
           </div>
           <div
             class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
             style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
+						@click="gongzuoHandler"
           >
             工作一秒
           </div>
@@ -185,6 +190,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { navigateTo } from '@tarojs/taro';
+import { getHexOrder } from "@/service/blueOrder/order";
 import bg from '../../assets/images/bg.png';
 import bluetooth from '../../assets/images/bluetooth.png';
 import unconnect from '../../assets/images/unconnect.png';
@@ -211,6 +217,91 @@ function handleToBluetooth() {
   navigateTo({
     url: '/package/bluetoothConnect/index'
   });
+}
+
+function kaiguanChange(value: boolean) {
+	let order = getHexOrder('kaiguan', value)
+	Taro.writeBLECharacteristicValue({
+		// 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+		deviceId,
+		// 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+		serviceId,
+		// 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+		characteristicId,
+		// 这里的value是ArrayBuffer类型
+		value: order,
+		success: function (res) {
+			console.log('writeBLECharacteristicValue success', res.errMsg)
+		}
+	})
+}
+
+function qiehuanHandler(num: number) {
+	let order = getHexOrder('qiehuan', num)
+	Taro.writeBLECharacteristicValue({
+		// 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+		deviceId,
+		// 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+		serviceId,
+		// 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+		characteristicId,
+		// 这里的value是ArrayBuffer类型
+		value: order,
+		success: function (res) {
+			console.log('writeBLECharacteristicValue success', res.errMsg)
+		}
+	})
+}
+
+function dengliziChange(value: boolean) {
+	let order = getHexOrder('denglizi', value)
+	Taro.writeBLECharacteristicValue({
+		// 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+		deviceId,
+		// 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+		serviceId,
+		// 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+		characteristicId,
+		// 这里的value是ArrayBuffer类型
+		value: order,
+		success: function (res) {
+			console.log('writeBLECharacteristicValue success', res.errMsg)
+		}
+	})
+}
+
+function meigeHandler(num: boolean) {
+	let order = getHexOrder('meige', num)
+	Taro.writeBLECharacteristicValue({
+		// 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+		deviceId,
+		// 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+		serviceId,
+		// 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+		characteristicId,
+		// 这里的value是ArrayBuffer类型
+		value: order,
+		success: function (res) {
+			console.log('writeBLECharacteristicValue success', res.errMsg)
+		}
+	})
+}
+
+function gongzuoHandler(num: boolean) {
+	let order = getHexOrder('gongzuo', num)
+	Taro.writeBLECharacteristicValue({
+		// 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+		deviceId,
+		// 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+		serviceId,
+		// 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+		characteristicId,
+		// 这里的value是ArrayBuffer类型
+		value: order,
+		success: function (res) {
+			console.log('writeBLECharacteristicValue success', res.errMsg)
+		}
+	})
 }
 
 /** 设置页面属性 */
