@@ -29,7 +29,7 @@ export function setOrderValue(type: string, value: number | boolean, arr: string
 	}
 	// 可以切换香薰123
 	if (type === 'qiehuan') {
-		let temp = 514 + (value as number)
+		let temp = 202 + (value as number)
 		arr[1] = temp.toString(16)
 	}
 	// 等离子 boolean
@@ -53,5 +53,10 @@ export function getHexOrder(type: string, value: number | boolean) {
 	const orderArr = createOrder();
 	setOrderType(type, orderArr);
 	setOrderValue(type, value, orderArr);
-	return orderArr.join('');
+	let buffer = new ArrayBuffer(3)
+	let dataView = new DataView(buffer)
+	orderArr.forEach((item,index) => {
+		dataView.setUint8(index, parseInt(item, 16))
+	})
+	return buffer;
 }
