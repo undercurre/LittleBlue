@@ -2,39 +2,39 @@
   <div class="bg-[#f8f8f8] h-100vh w-750rpx fixed top-0" style="z-index: -1000"></div>
   <img :src="bg" style="position: fixed; width: 750rpx; height: 372rpx; top: 0; z-index: -100" />
   <div class="flex flex-col items-center">
-    <div class="relative mt-54px w-375px h-24px flex items-center">
-      <div class="flex items-center ml-20px text-12px text-white">
+    <div class="relative mt-108rpx w-750rpx h-48rpx flex items-center">
+      <div class="flex items-center ml-40rpx text-24rpx text-white">
         <img :src="unconnect" style="width: 48rpx; height: 40rpx" />
         未连接
       </div>
       <div class="absolute left-137px text-17px text-white">净化香薰系统</div>
     </div>
-    <div class="mt-70px p-12px rounded-10px bg-white w-335px h-126px relative">
-      <div class="absolute right-12px top-12px flex items-center" style="color: #999; font-size: 24rpx">
+    <div class="mt-140rpx p-24rpx rounded-20rpx bg-white w-670rpx h-252rpx relative box-border">
+      <div class="absolute right-24rpx top-24rpx flex items-center" style="color: #999; font-size: 24rpx">
         <img :src="fuwei" style="width: 28rpx; height: 28rpx; margin-top: 2rpx; margin-right: 10rpx" />
         香水复位
       </div>
       <div class="flex items-center" style="font-weight: 700; font-size: 29rpx">
-        <div class="w-54px h-54px rounded-full flex justify-center items-center mr-12px gradient">
+        <div class="w-108rpx h-108rpx rounded-full flex justify-center items-center mr-24rpx gradient">
           <img :src="nongdu" style="width: 30rpx; height: 40rpx" />
         </div>
         香氛浓度
       </div>
       <div>滑块</div>
     </div>
-    <div class="mt-20px p-12px rounded-10px bg-white w-335px relative">
-      <div class="absolute right-25px top-18px">
+    <div class="mt-40rpx p-24rpx rounded-20rpx bg-white w-670rpx relative box-border">
+      <div class="absolute right-50rpx top-36rpx">
         <img :src="shadow" style="height: 200rpx; width: 200rpx" />
       </div>
       <div class="flex items-center" style="font-weight: 700; font-size: 29rpx">
-        <div class="w-54px h-54px rounded-full flex justify-center items-center mr-12px gradient">
+        <div class="w-108rpx h-108rpx rounded-full flex justify-center items-center mr-24rpx gradient">
           <img :src="nongdu" style="width: 30rpx; height: 40rpx" />
         </div>
         香氛剩余量
       </div>
-      <div class="mt-16px">
+      <div class="mt-32rpx">
         <div class="relative">
-          <div class="white-text absolute top-4px left-12px">香型A</div>
+          <div class="white-text absolute top-8rpx left-24rpx">香型A</div>
           <nut-progress
             percentage="100"
             status="active"
@@ -44,8 +44,8 @@
           >
           </nut-progress>
         </div>
-        <div class="mt-8px relative">
-          <div class="white-text absolute top-4px left-12px">香型B</div>
+        <div class="mt-16rpx relative">
+          <div class="white-text absolute top-8rpx left-24rpx">香型B</div>
           <nut-progress
             percentage="75"
             status="active"
@@ -55,8 +55,8 @@
           >
           </nut-progress>
         </div>
-        <div class="mt-8px relative">
-          <div class="white-text absolute top-4px left-12px">香型C</div>
+        <div class="mt-16rpx relative">
+          <div class="white-text absolute top-8rpx left-24rpx">香型C</div>
           <nut-progress
             percentage="25"
             status="active"
@@ -68,103 +68,104 @@
         </div>
       </div>
     </div>
-    <div
-      class="w-320rpx h-230rpx bg-white mr-15rpx mb-15rpx rounded-16rpx p-32rpx box-border flex flex-col justify-between"
-    >
-      <div class="flex justify-between items-center">
-        <div
-          class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
-          style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
-        >
-          <img :src="kaiguan" style="width: 42rpx; height: 42rpx" />
+    <div class="flex w-670rpx justify-between mt-40rpx">
+      <div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex flex-col justify-between">
+        <div class="flex justify-between items-center">
+          <div
+            class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
+            style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
+          >
+            <img :src="kaiguan" style="width: 42rpx; height: 42rpx" />
+          </div>
+          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" />
         </div>
-        <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" />
+        <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
       </div>
-      <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
-    </div>
-    <div class="w-320rpx h-230rpx bg-white ml-15rpx mb-15rpx rounded-16rpx p-32rpx box-border flex justify-between">
-      <div class="flex flex-col justify-between items-center">
-        <div
-          class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
-          style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
-        >
-          <img :src="qiehuan" style="width: 42rpx; height: 42rpx" />
+      <div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex justify-between">
+        <div class="flex flex-col justify-between items-center">
+          <div
+            class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
+            style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
+          >
+            <img :src="qiehuan" style="width: 42rpx; height: 42rpx" />
+          </div>
+          <h3 style="font-size: 30rpx; font-weight: 700">香氛切换</h3>
         </div>
-        <h3 style="font-size: 30rpx; font-weight: 700">香氛切换</h3>
-      </div>
-      <div class="flex flex-col justify-between">
-        <div
-          class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
-          style="font-size: 22rpx; color: #ffffff"
-        >
-          香氛A
-        </div>
-        <div
-          class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
-          style="font-size: 22rpx; color: #ffffff"
-        >
-          香氛B
-        </div>
-        <div
-          class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx"
-          style="font-size: 22rpx; color: #ffffff"
-        >
-          香氛C
-        </div>
-      </div>
-    </div>
-    <div
-      class="w-320rpx h-230rpx bg-white mr-15rpx mt-15rpx rounded-16rpx p-32rpx box-border flex flex-col justify-between"
-    >
-      <div class="flex justify-between items-center">
-        <div
-          class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
-          style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
-        >
-          <img :src="denglizi" style="width: 42rpx; height: 42rpx" />
-        </div>
-        <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" />
-      </div>
-      <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
-    </div>
-    <div class="w-320rpx h-230rpx bg-white ml-15rpx mt-15rpx rounded-16rpx p-32rpx box-border flex justify-between">
-      <div class="flex flex-col justify-between items-center">
-        <div
-          class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
-          style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
-        >
-          <img :src="shezhi" style="width: 42rpx; height: 42rpx" />
-        </div>
-        <h3 style="font-size: 30rpx; font-weight: 700">香氛设置</h3>
-      </div>
-      <div class="flex flex-col justify-between items-end">
-        <div
-          class="w-46rpx h-46rpx rounded-full flex justify-center items-center mb-12rpx"
-          style="box-shadow: 0 5rpx 30rpx 0 rgba(0, 142, 229, 0.2)"
-        >
-          <img :src="shezhiIcon" style="width: 29rpx; height: 29rpx" />
-        </div>
-        <div
-          class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
-          style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-        >
-          每隔一秒
-        </div>
-        <div
-          class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
-          style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-        >
-          工作一秒
+        <div class="flex flex-col justify-between">
+          <div
+            class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
+            style="font-size: 22rpx; color: #ffffff"
+          >
+            香氛A
+          </div>
+          <div
+            class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
+            style="font-size: 22rpx; color: #ffffff"
+          >
+            香氛B
+          </div>
+          <div
+            class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx"
+            style="font-size: 22rpx; color: #ffffff"
+          >
+            香氛C
+          </div>
         </div>
       </div>
     </div>
-    <div class="box-shadow fixed w-375px h-60px bg-white bottom-0 flex items-center">
-      <div class="flex flex-1 justify-center items-center">
+    <div class="flex w-670rpx justify-between mt-40rpx">
+      <div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex flex-col justify-between">
+        <div class="flex justify-between items-center">
+          <div
+            class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
+            style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
+          >
+            <img :src="denglizi" style="width: 42rpx; height: 42rpx" />
+          </div>
+          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" />
+        </div>
+        <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
+      </div>
+      <div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex justify-between">
+        <div class="flex flex-col justify-between items-center">
+          <div
+            class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
+            style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
+          >
+            <img :src="shezhi" style="width: 42rpx; height: 42rpx" />
+          </div>
+          <h3 style="font-size: 30rpx; font-weight: 700">香氛设置</h3>
+        </div>
+        <div class="flex flex-col justify-between items-end">
+          <div
+            class="w-46rpx h-46rpx rounded-full flex justify-center items-center mb-12rpx"
+            style="box-shadow: 0 5rpx 30rpx 0 rgba(0, 142, 229, 0.2)"
+          >
+            <img :src="shezhiIcon" style="width: 29rpx; height: 29rpx" />
+          </div>
+          <div
+            class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
+            style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
+          >
+            每隔一秒
+          </div>
+          <div
+            class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
+            style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
+          >
+            工作一秒
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="w-750rpx h-140rpx"></div>
+    <div class="box-shadow fixed w-750rpx h-60px bg-white bottom-0 flex items-center">
+      <div class="flex flex-1 justify-center items-center" @click="handleToAbout">
         <img :src="guanyu" style="width: 42rpx; height: 42rpx" />
         <span class="ml-9px">关于我们</span>
       </div>
-      <div class="w-2px h-16px bg-black rounded-2px"></div>
-      <div class="flex flex-1 justify-center items-center">
+      <div class="w-2px h-32rpx bg-black rounded-2px"></div>
+      <div class="flex flex-1 justify-center items-center" @click="handleToBluetooth">
         <img :src="lianxi" style="width: 42rpx; height: 42rpx" />
         <span class="ml-9px">联系方式</span>
       </div>
@@ -189,28 +190,17 @@ import qiehuan from '../../assets/images/qiehuan.png';
 import shezhi from '../../assets/images/shezhi.png';
 import shezhiIcon from '../../assets/images/shezhiIcon.png';
 
-const visible1 = ref<boolean>(false);
 const kaiguanchecked = ref(true);
 
-function baseClick() {
-  visible1.value = true;
-}
-
-function handleToA() {
+function handleToAbout() {
   navigateTo({
-    url: '/package/packageA/index'
+    url: '/package/about/index'
   });
 }
 
-function handleToB() {
+function handleToBluetooth() {
   navigateTo({
-    url: '/package/packageB/index'
-  });
-}
-
-function handleToC() {
-  navigateTo({
-    url: '/package/packageC/index'
+    url: '/package/bluetoothConnect/index'
   });
 }
 
@@ -226,7 +216,7 @@ span {
 }
 
 .box-shadow {
-  box-shadow: 0px -4px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px -8rpx 30px rgba(0, 0, 0, 0.05);
 }
 
 .gradient {
