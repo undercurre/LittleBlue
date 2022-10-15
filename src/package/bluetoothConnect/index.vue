@@ -1,6 +1,6 @@
 <template>
   <div class="flex items-center flex-col">
-    <div v-for="item in bluetoothList" :key="item.name" class="w-670rpx mt-58rpx">
+    <div v-for="item in bluetoothList" :key="item.name" class="w-670rpx bluetoothCell px-40rpx pt-40rpx">
       <div class="flex justify-between">
         <div class="title">{{ item.name }}</div>
         <div class="buttom-text" :style="{ color: connectUUID === item.uuid ? '#00C777' : '#000' }">
@@ -28,7 +28,8 @@ import { ref } from 'vue';
 definePageConfig({
   navigationBarTitleText: '蓝牙连接',
   navigationStyle: 'default',
-  backgroundTextStyle: 'dark'
+  backgroundTextStyle: 'dark',
+  enablePullDownRefresh: true
 });
 
 const connectUUID = ref('1231231231231');
@@ -62,6 +63,14 @@ const bluetoothList = ref<
 ]);
 </script>
 
+<script lang="ts">
+export default {
+  onPullDownRefresh: () => {
+    console.log('123');
+  }
+};
+</script>
+
 <style lang="scss">
 .title {
   font-family: 'PingFang SC';
@@ -87,5 +96,9 @@ const bluetoothList = ref<
   font-size: 26rpx;
   line-height: 36rpx;
   color: #000000;
+}
+
+.bluetoothCell:active {
+  background-color: #f7f7f7;
 }
 </style>

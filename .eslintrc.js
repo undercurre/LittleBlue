@@ -3,6 +3,7 @@ module.exports = {
   rules: {
     'import/no-unresolved': ['error', { ignore: ['uno.css', '~icons/*', 'virtual:svg-icons-register'] }],
     'no-return-await': 'off',
+    'no-console': 'off',
     'import/order': [
       'error',
       {
