@@ -4,6 +4,7 @@ module.exports = {
     'import/no-unresolved': ['error', { ignore: ['uno.css', '~icons/*', 'virtual:svg-icons-register'] }],
     'no-return-await': 'off',
     'no-console': 'off',
+    'require-atomic-updates': 'off',
     'import/order': [
       'error',
       {

@@ -4,8 +4,9 @@
   <div class="flex flex-col items-center">
     <div class="relative mt-108rpx w-750rpx h-48rpx flex items-center">
       <div class="flex items-center ml-40rpx text-24rpx text-white" @click="handleToBluetooth">
-        <img :src="unconnect" style="width: 48rpx; height: 40rpx" />
-        未连接
+        <img v-if="isConnect" :src="bluetooth" style="width: 19rpx; height: 34rpx" />
+        <img v-else :src="unconnect" style="width: 48rpx; height: 40rpx" />
+        {{ isConnect ? '已连接' : '未连接' }}
       </div>
       <div class="absolute left-137px text-17px text-white">净化香薰系统</div>
     </div>
@@ -189,12 +190,14 @@
       </div>
     </div>
   </div>
+  <nut-dialog v-model:visible="bleNotOpenDialog" title="蓝牙未打开" content="请打开蓝牙再进行操作" />
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, watchEffect } from 'vue';
 import { navigateTo, default as Taro } from '@tarojs/taro';
 import { getHexOrder } from '@/service/blueOrder/order';
+import { useBle } from '../../hooks';
 import bg from '../../assets/images/bg.png';
 import bluetooth from '../../assets/images/bluetooth.png';
 import unconnect from '../../assets/images/unconnect.png';
@@ -209,8 +212,31 @@ import qiehuan from '../../assets/images/qiehuan.png';
 import shezhi from '../../assets/images/shezhi.png';
 import shezhiIcon from '../../assets/images/shezhiIcon.png';
 
+const app = Taro.getApp();
+
+if (!app.globalData) {
+  app.globalData = {};
+  app.globalData.ble = useBle();
+} else if (!app.globalData.ble) {
+  app.globalData.ble = useBle();
+}
+
 const xiangXunNongDu = ref(0);
 const kaiguanchecked = ref(true);
+const isConnect = ref(false);
+let deviceId = '';
+let serviceId = '';
+let characteristicId = '';
+const bleNotOpenDialog = ref(false);
+
+watchEffect(() => {
+  isConnect.value = app.globalData.ble.connected.value;
+  if (isConnect.value) {
+    deviceId = app.globalData.ble.deviceId.value;
+    serviceId = app.globalData.ble.serviceId.value;
+    characteristicId = app.globalData.ble.characteristicId.value;
+  }
+});
 
 function handleXiangXunNongDuChange(level: number) {
   const animate = Taro.getCurrentInstance()?.page?.animate;
@@ -243,7 +269,12 @@ function handleToAbout() {
   });
 }
 
-function handleToBluetooth() {
+async function handleToBluetooth() {
+  const res = await app.globalData.ble.openBluetoothAdapter();
+  if (!res) {
+    bleNotOpenDialog.value = true;
+    return;
+  }
   navigateTo({
     url: '/package/bluetoothConnect/index'
   });
@@ -261,6 +292,7 @@ function kaiguanChange(value: boolean) {
     // 这里的value是ArrayBuffer类型
     value: order,
     success(res) {
+      Taro.showToast({ title: JSON.stringify(order) });
       console.log('writeBLECharacteristicValue success', res.errMsg);
     }
   });

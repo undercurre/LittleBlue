@@ -1,6 +1,6 @@
 <template>
-  <div class="flex items-center flex-col">
-    <div class="mt-52rpx mb-64rpx mx-42rpx">
+  <div class="mt-52rpx flex items-center flex-col">
+    <div class="mb-64rpx mx-42rpx">
       <p style="font-size: 26rpx; line-height: 46rpx; letter-spacing: 0.1em; margin-bottom: 64rpx; color: #333333">
         公司倡导“率真存厚、立志有恒,奋斗为本、成就客户;创造分享、共同成长”的经营理念，是您值得信赖的专家伙伴。
       </p>

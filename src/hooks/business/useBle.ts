@@ -26,83 +26,89 @@ export default function useCountDown() {
   const discoveryStarted = ref(false);
   const connected = ref(false); // 连接状态
   const deviceId = ref(''); // 蓝牙设备ID
-  const serviceId = ref('');
-  const characteristicId = ref('');
+  const serviceId = ref(''); // 服务UUID
+  const characteristicId = ref(''); // 写数据特征值UUID
   const deviceName = ref('');
   const characteristics = ref<any[]>([]);
   const scaning = ref(false); // 是否在搜索
   function onBluetoothDeviceFound() {
     Taro.onBluetoothDeviceFound(res => {
+      console.log('找到！', res);
       res.devices.forEach(device => {
         if (!device.name && !device.localName) {
           return;
         }
-        const foundDevices = devices.value;
-        const idx = inArray(foundDevices, 'deviceId', device.deviceId);
+        const idx = inArray(devices.value, 'deviceId', device.deviceId);
         if (idx === -1) {
-          devices.value[foundDevices.length] = device;
+          devices.value = [...devices.value, device];
         } else {
           devices.value[idx] = device;
         }
       });
     });
   }
-  function stopBluetoothDevicesDiscovery() {
+  async function stopBluetoothDevicesDiscovery() {
     discoveryStarted.value = false;
-    Taro.stopBluetoothDevicesDiscovery();
+    await Taro.stopBluetoothDevicesDiscovery();
   }
-  function startBluetoothDevicesDiscovery() {
+  async function startBluetoothDevicesDiscovery() {
     if (discoveryStarted.value) {
-      stopBluetoothDevicesDiscovery();
-      return;
+      await stopBluetoothDevicesDiscovery();
     }
     devices.value = [];
     characteristics.value = [];
     discoveryStarted.value = true;
-    Taro.startBluetoothDevicesDiscovery({
-      allowDuplicatesKey: true,
-      success: res => {
-        setTimeout(() => {
-          console.log('----BluetoothDevicesDiscovery finish---- ');
-          if (discoveryStarted.value) {
-            stopBluetoothDevicesDiscovery();
-          }
-        }, 20000);
-        console.log('startBluetoothDevicesDiscovery success', res);
-        onBluetoothDeviceFound();
-      }
-    });
+    try {
+      const res = Taro.startBluetoothDevicesDiscovery({ allowDuplicatesKey: true });
+      setTimeout(() => {
+        console.log('----BluetoothDevicesDiscovery finish---');
+        if (discoveryStarted.value) {
+          stopBluetoothDevicesDiscovery();
+        }
+      }, 5000);
+      console.log('startBluetoothDevicesDiscovery-res', res);
+      onBluetoothDeviceFound();
+    } catch (err) {
+      console.log('startBluetoothDevicesDiscovery-err', err);
+    }
   }
-  function openBluetoothAdapter() {
+  async function openBluetoothAdapter() {
     scaning.value = false;
-    Taro.openBluetoothAdapter({
-      success: (res: any) => {
-        console.log('openBluetoothAdapter success', res);
-        startBluetoothDevicesDiscovery();
-      },
-      fail: (res: any) => {
-        if (res.errCode === 10001) {
-          Taro.onBluetoothAdapterStateChange((res1: any) => {
-            console.log('onBluetoothAdapterStateChange', res1);
-            if (res1.available) {
-              startBluetoothDevicesDiscovery();
-            }
-          });
-        }
-      }
-    });
+    try {
+      const res = await Taro.openBluetoothAdapter();
+      console.log('openBluetoothAdapter-res', res);
+      return true;
+    } catch (err) {
+      console.log('openBluetoothAdapter-err', err);
+      return false;
+    }
+
+    // {
+    //   success: (res: any) => {
+    //     console.log('openBluetoothAdapter success', res);
+    //     startBluetoothDevicesDiscovery();
+    //   },
+    //   fail: (res: any) => {
+    //     if (res.errCode === 10001) {
+    //       Taro.onBluetoothAdapterStateChange((res1: any) => {
+    //         console.log('onBluetoothAdapterStateChange', res1);
+    //         if (res1.available) {
+    //           startBluetoothDevicesDiscovery();
+    //         }
+    //       });
+    //     }
+    //   }
+    // }
   }
-  function getBluetoothAdapterState() {
-    Taro.getBluetoothAdapterState({
-      success: (res: any) => {
-        console.log('getBluetoothAdapterState', res);
-        if (res.discovering) {
-          onBluetoothDeviceFound();
-        } else if (res.available) {
-          startBluetoothDevicesDiscovery();
-        }
-      }
-    });
+  async function getBluetoothAdapterState() {
+    try {
+      const res = await Taro.getBluetoothAdapterState();
+      console.log('getBluetoothAdapterState-res', res);
+      return true;
+    } catch (err) {
+      console.log('getBluetoothAdapterState-err', err);
+      return false;
+    }
   }
   function writeBLECharacteristicValue(buffer: ArrayBuffer) {
     // 向蓝牙设备发送一个0x00的16进制数据
@@ -116,41 +122,51 @@ export default function useCountDown() {
       value: buffer
     });
   }
-  function getBLEDeviceCharacteristics(insDeviceId: string, insServiceId: string) {
-    Taro.getBLEDeviceCharacteristics({
-      deviceId: insDeviceId,
-      serviceId: insServiceId,
-      success: res => {
-        console.log('getBLEDeviceCharacteristics success', res.characteristics);
-        for (let i = 0; i < res.characteristics.length; i += 1) {
-          const item = res.characteristics[i];
-          if (item.properties.read) {
-            Taro.readBLECharacteristicValue({
-              deviceId: insDeviceId,
-              serviceId: insServiceId,
-              characteristicId: item.uuid
-            });
-          }
-          if (item.properties.write) {
-            deviceId.value = insDeviceId;
-            serviceId.value = insServiceId;
-            characteristicId.value = item.uuid;
-            // this.writeBLECharacteristicValue();
-          }
-          if (item.properties.notify || item.properties.indicate) {
-            Taro.notifyBLECharacteristicValueChange({
-              deviceId: insDeviceId,
-              serviceId: insServiceId,
-              characteristicId: item.uuid,
-              state: true
-            });
-          }
-        }
-      },
-      fail(res) {
-        console.error('getBLEDeviceCharacteristics', res);
-      }
-    });
+  async function getBLEDeviceCharacteristics(insDeviceId: string, insServiceId: string): Promise<any> {
+    try {
+      const characteristicsRes = await Taro.getBLEDeviceCharacteristics({
+        deviceId: insDeviceId,
+        serviceId: insServiceId
+      });
+      return characteristicsRes;
+    } catch (err) {
+      console.error('getBLEDeviceCharacteristics-err', err);
+      return false;
+    }
+    // const characteristics = await Taro.getBLEDeviceCharacteristics({
+    //   deviceId: insDeviceId,
+    //   serviceId: insServiceId,
+    //   success: res => {
+    //     console.log('getBLEDeviceCharacteristics success', res.characteristics);
+    //     // for (let i = 0; i < res.characteristics.length; i += 1) {
+    //     //   const item = res.characteristics[i];
+    //     //   if (item.properties.read) {
+    //     //     Taro.readBLECharacteristicValue({
+    //     //       deviceId: insDeviceId,
+    //     //       serviceId: insServiceId,
+    //     //       characteristicId: item.uuid
+    //     //     });
+    //     //   }
+    //     //   if (item.properties.write) {
+    //     //     deviceId.value = insDeviceId;
+    //     //     serviceId.value = insServiceId;
+    //     //     characteristicId.value = item.uuid;
+    //     //     // this.writeBLECharacteristicValue();
+    //     //   }
+    //     //   if (item.properties.notify || item.properties.indicate) {
+    //     //     Taro.notifyBLECharacteristicValueChange({
+    //     //       deviceId: insDeviceId,
+    //     //       serviceId: insServiceId,
+    //     //       characteristicId: item.uuid,
+    //     //       state: true
+    //     //     });
+    //     //   }
+    //     // }
+    //   },
+    //   fail(res) {
+    //     console.error('getBLEDeviceCharacteristics', res);
+    //   }
+    // });
     // 操作之前先监听，保证第一时间获取数据
     Taro.onBLECharacteristicValueChange((characteristic: any) => {
       const idx = inArray(characteristics.value, 'uuid', characteristic.characteristicId);
@@ -167,31 +183,33 @@ export default function useCountDown() {
       }
     });
   }
-  function getBLEDeviceServices(insDeviceId: string) {
-    Taro.getBLEDeviceServices({
-      deviceId: insDeviceId,
-      success: (res: any) => {
-        for (let i = 0; i < res.services.length; i += 1) {
-          if (res.services[i].isPrimary) {
-            getBLEDeviceCharacteristics(insDeviceId, res.services[i].uuid);
-            return;
-          }
-        }
-      }
+  async function getBLEDeviceServices(insDeviceId: string) {
+    const res = await Taro.getBLEDeviceServices({
+      deviceId: insDeviceId
     });
+    console.log('getBLEDeviceServices', res);
+    return res;
+    // for (let i = 0; i < res.services.length; i += 1) {
+    // 	if (res.services[i].isPrimary) {
+    // 		getBLEDeviceCharacteristics(insDeviceId, res.services[i].uuid);
+    // 		return;
+    // 	}
+    // }
   }
-  function createBLEConnection(e: any) {
-    const ds = e.currentTarget.dataset;
-    deviceId.value = ds.deviceId;
-    deviceName.value = ds.name;
-    Taro.createBLEConnection({
-      deviceId: deviceId.value,
-      success: () => {
-        connected.value = true;
-        getBLEDeviceServices(deviceId.value);
-      }
-    });
-    stopBluetoothDevicesDiscovery();
+  async function createBLEConnection(device: any) {
+    deviceId.value = device.deviceId;
+    deviceName.value = device.name;
+    try {
+      const res = await Taro.createBLEConnection({
+        deviceId: deviceId.value
+      });
+      console.log('createBLEConnection-res', res);
+      connected.value = true;
+      return true;
+    } catch (err) {
+      console.log('createBLEConnection-err', err);
+      return false;
+    }
   }
 
   return {
@@ -200,6 +218,8 @@ export default function useCountDown() {
     stopBluetoothDevicesDiscovery,
     startBluetoothDevicesDiscovery,
     createBLEConnection,
+    getBLEDeviceServices,
+    getBLEDeviceCharacteristics,
     writeBLECharacteristicValue,
     devices,
     connected,
