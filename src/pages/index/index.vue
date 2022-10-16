@@ -4,8 +4,8 @@
   <div class="flex flex-col items-center">
     <div class="relative mt-108rpx w-750rpx h-48rpx flex items-center">
       <div class="flex items-center ml-40rpx text-24rpx text-white" @click="handleToBluetooth">
-        <img v-if="isConnect" :src="bluetooth" style="width: 19rpx; height: 34rpx" />
-        <img v-else :src="unconnect" style="width: 48rpx; height: 40rpx" />
+        <img v-if="isConnect" :src="bluetooth" style="width: 19rpx; height: 34rpx; margin-right: 4rpx" />
+        <img v-else :src="unconnect" style="width: 48rpx; height: 40rpx; margin-right: 4rpx" />
         {{ isConnect ? '已连接' : '未连接' }}
       </div>
       <div class="absolute left-137px text-17px text-white">净化香薰系统</div>
@@ -191,6 +191,12 @@
     </div>
   </div>
   <nut-dialog v-model:visible="bleNotOpenDialog" title="蓝牙未打开" content="请打开蓝牙再进行操作" />
+  <nut-dialog
+    v-model:visible="toSettingDialogVisible"
+    title="蓝牙未授权"
+    content="请在设置页面允许使用蓝牙"
+    @ok="toSetting"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -228,6 +234,7 @@ let deviceId = '';
 let serviceId = '';
 let characteristicId = '';
 const bleNotOpenDialog = ref(false);
+const toSettingDialogVisible = ref(false);
 
 watchEffect(() => {
   isConnect.value = app.globalData.ble.connected.value;
@@ -237,6 +244,11 @@ watchEffect(() => {
     characteristicId = app.globalData.ble.characteristicId.value;
   }
 });
+
+function toSetting() {
+  Taro.openSetting();
+  toSettingDialogVisible.value = false;
+}
 
 function handleXiangXunNongDuChange(level: number) {
   const animate = Taro.getCurrentInstance()?.page?.animate;
@@ -268,8 +280,15 @@ function handleToAbout() {
     url: '/package/about/index'
   });
 }
-
+interface AuthSetting {
+  'scope.bluetooth': boolean;
+}
 async function handleToBluetooth() {
+  const setting = await Taro.getSetting();
+  if (!(setting.authSetting as AuthSetting)['scope.bluetooth']) {
+    toSettingDialogVisible.value = true;
+    return;
+  }
   const res = await app.globalData.ble.openBluetoothAdapter();
   if (!res) {
     bleNotOpenDialog.value = true;
