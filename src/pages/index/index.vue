@@ -91,7 +91,7 @@
           >
             <img :src="kaiguan" style="width: 42rpx; height: 42rpx" />
           </div>
-          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" @change="kaiguanChange" />
+          <nut-switch v-model="xiangxunkaiguanchecked" active-text="ON" inactive-text="OFF" @change="kaiguanChange" />
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
       </div>
@@ -139,7 +139,7 @@
           >
             <img :src="denglizi" style="width: 42rpx; height: 42rpx" />
           </div>
-          <nut-switch v-model="kaiguanchecked" active-text="ON" inactive-text="OFF" @change="dengliziChange" />
+          <nut-switch v-model="denglizikaiguanchecked" active-text="ON" inactive-text="OFF" @change="dengliziChange" />
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
       </div>
@@ -228,7 +228,8 @@ if (!app.globalData) {
 }
 
 const xiangXunNongDu = ref(0);
-const kaiguanchecked = ref(true);
+const xiangxunkaiguanchecked = ref(true);
+const denglizikaiguanchecked = ref(true);
 const isConnect = ref(false);
 let deviceId = '';
 let serviceId = '';
@@ -280,9 +281,11 @@ function handleToAbout() {
     url: '/package/about/index'
   });
 }
+
 interface AuthSetting {
   'scope.bluetooth': boolean;
 }
+
 async function handleToBluetooth() {
   const setting = await Taro.getSetting();
   if (!(setting.authSetting as AuthSetting)['scope.bluetooth']) {
@@ -299,22 +302,27 @@ async function handleToBluetooth() {
   });
 }
 
+function buf2hex(buffer: ArrayBuffer) {
+  return Array.prototype.map.call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2)).join('');
+}
+
 function kaiguanChange(value: boolean) {
   const order = getHexOrder('kaiguan', value);
-  Taro.writeBLECharacteristicValue({
-    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
-    deviceId,
-    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
-    serviceId,
-    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
-    characteristicId,
-    // 这里的value是ArrayBuffer类型
-    value: order,
-    success(res) {
-      Taro.showToast({ title: JSON.stringify(order) });
-      console.log('writeBLECharacteristicValue success', res.errMsg);
-    }
-  });
+  Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.writeBLECharacteristicValue({
+  //   // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+  //   deviceId,
+  //   // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+  //   serviceId,
+  //   // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+  //   characteristicId,
+  //   // 这里的value是ArrayBuffer类型
+  //   value: order,
+  //   success(res) {
+  //     Taro.showToast({ title: JSON.stringify(order) });
+  //     console.log('writeBLECharacteristicValue success', res.errMsg);
+  //   }
+  // });
 }
 
 function qiehuanHandler(num: number) {
