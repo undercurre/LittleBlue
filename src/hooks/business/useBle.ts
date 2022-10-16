@@ -65,7 +65,7 @@ export default function useCountDown() {
         if (discoveryStarted.value) {
           stopBluetoothDevicesDiscovery();
         }
-      }, 5000);
+      }, 10000);
       console.log('startBluetoothDevicesDiscovery-res', res);
       onBluetoothDeviceFound();
     } catch (err) {

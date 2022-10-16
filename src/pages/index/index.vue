@@ -3,7 +3,7 @@
   <img :src="bg" style="position: fixed; width: 750rpx; height: 372rpx; top: 0; z-index: -100" />
   <div class="flex flex-col items-center">
     <div class="relative mt-108rpx w-750rpx h-48rpx flex items-center">
-      <div class="flex items-center ml-40rpx text-24rpx text-white" @click="handleToBluetooth">
+      <div class="flex items-center p-40rpx text-24rpx text-white" @click="handleToBluetooth">
         <img v-if="isConnect" :src="bluetooth" style="width: 19rpx; height: 34rpx; margin-right: 4rpx" />
         <img v-else :src="unconnect" style="width: 48rpx; height: 40rpx; margin-right: 4rpx" />
         {{ isConnect ? '已连接' : '未连接' }}
@@ -287,11 +287,6 @@ interface AuthSetting {
 }
 
 async function handleToBluetooth() {
-  const setting = await Taro.getSetting();
-  if (!(setting.authSetting as AuthSetting)['scope.bluetooth']) {
-    toSettingDialogVisible.value = true;
-    return;
-  }
   const res = await app.globalData.ble.openBluetoothAdapter();
   if (!res) {
     bleNotOpenDialog.value = true;
