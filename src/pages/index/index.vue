@@ -11,7 +11,7 @@
       <div class="absolute left-137px text-17px text-white">净化香薰系统</div>
     </div>
     <div class="mt-140rpx p-24rpx rounded-20rpx bg-white w-670rpx h-252rpx relative box-border">
-      <div class="absolute right-24rpx top-24rpx flex items-center" style="color: #999; font-size: 24rpx">
+      <div class="absolute right-24rpx top-24rpx flex items-center" style="color: #999; font-size: 24rpx" @click="handlefuwei">
         <img :src="fuwei" style="width: 28rpx; height: 28rpx; margin-top: 2rpx; margin-right: 10rpx" />
         香水复位
       </div>
@@ -317,6 +317,12 @@ async function handleToBluetooth() {
 
 function buf2hex(buffer: ArrayBuffer) {
   return Array.prototype.map.call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2)).join('');
+}
+
+function handlefuwei() {
+	if (!openBLENotConnectDialogIfNotConnect()) return;
+	const order = getHexOrder('kaiguan', 0);
+	Taro.showToast({ title: `发送：${buf2hex(order)}` });
 }
 
 function kaiguanChange(value: boolean) {
