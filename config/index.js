@@ -24,9 +24,6 @@ const config = {
       enable: false
     }
   },
-  cache: {
-    enable: true
-  },
   sourceRoot: 'src',
   outputRoot: 'dist',
   plugins: isOpenDevTools
