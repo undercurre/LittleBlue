@@ -20,10 +20,10 @@
         <div class="info-text">deviceId：</div>
         <div class="info-text">{{ item.deviceId }}</div>
       </div>
-      <div class="flex justify-between mt-24rpx">
+      <!-- <div class="flex justify-between mt-24rpx">
         <div class="info-text">SERVICE数量：</div>
         <div class="info-text">{{ item.serviceNum }}</div>
-      </div>
+      </div> -->
       <div class="w-670rpx h-1rpx mt-40rpx bg-[#E7E7E7]"></div>
     </div>
   </div>
@@ -82,7 +82,7 @@ interface bleInfo {
   name: string;
   deviceId: string;
   signalStrength: number;
-  serviceNum: number;
+  // serviceNum: number;
 }
 
 const bluetoothList = ref<bleInfo[]>([]);
@@ -167,8 +167,8 @@ watchEffect(() => {
     .map(device => ({
       name: device.name || device.localName,
       deviceId: device.deviceId,
-      signalStrength: device.RSSI,
-      serviceNum: device.advertisServiceUUIDs.length || 0
+      signalStrength: device.RSSI
+      // serviceNum: device.advertisServiceUUIDs || device.advertisServiceUUIDs.length || 0
     }));
 });
 </script>

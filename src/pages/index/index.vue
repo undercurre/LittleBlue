@@ -30,10 +30,10 @@
         </div>
         <div class="absolute left-58rpx top-23rpx white-text" style="font-size: 24rpx">淡香</div>
         <div class="absolute left-357rpx top-23rpx white-text" style="font-size: 24rpx">清香</div>
-        <div class="absolute w-155rpx h-80rpx left-0" @click="handleXiangXunNongDuChange(0)"></div>
-        <div class="absolute w-155rpx h-80rpx left-155rpx" @click="handleXiangXunNongDuChange(1)"></div>
+        <div class="absolute w-155rpx h-80rpx left-0" @click="handleXiangXunNongDuChange(1)"></div>
+        <!-- <div class="absolute w-155rpx h-80rpx left-155rpx" @click="handleXiangXunNongDuChange(1)"></div> -->
         <div class="absolute w-155rpx h-80rpx left-310rpx" @click="handleXiangXunNongDuChange(2)"></div>
-        <div class="absolute w-155rpx h-80rpx left-465rpx" @click="handleXiangXunNongDuChange(3)"></div>
+        <!-- <div class="absolute w-155rpx h-80rpx left-465rpx" @click="handleXiangXunNongDuChange(3)"></div> -->
       </div>
     </div>
     <div class="mt-40rpx p-24rpx rounded-20rpx bg-white w-670rpx relative box-border">
@@ -190,13 +190,7 @@
       </div>
     </div>
   </div>
-  <nut-dialog v-model:visible="bleNotOpenDialog" title="蓝牙未打开" content="请打开蓝牙再进行操作" />
-  <nut-dialog
-    v-model:visible="toSettingDialogVisible"
-    title="蓝牙未授权"
-    content="请在设置页面允许使用蓝牙"
-    @ok="toSetting"
-  />
+  <nut-dialog v-model:visible="bleNotWorkDialog" :title="dialogTitle" :content="dialogContent" no-cancel-btn />
 </template>
 
 <script lang="ts" setup>
@@ -234,8 +228,26 @@ const isConnect = ref(false);
 let deviceId = '';
 let serviceId = '';
 let characteristicId = '';
-const bleNotOpenDialog = ref(false);
-const toSettingDialogVisible = ref(false);
+const bleNotWorkDialog = ref(false);
+const dialogTitle = ref('');
+const dialogContent = ref('');
+
+function openBLENotOpenDialog() {
+  dialogTitle.value = '蓝牙不可用';
+  dialogContent.value = '请打开蓝牙再进行操作,苹果手机用户需要到系统设置允许使用蓝牙功能';
+  bleNotWorkDialog.value = true;
+}
+
+// 如果没连接蓝牙，调用这个方法弹窗，并返回是否已连接
+function openBLENotConnectDialogIfNotConnect() {
+  if (!isConnect.value) {
+    dialogTitle.value = '操作错误';
+    dialogContent.value = '请连接蓝牙再进行操作';
+    bleNotWorkDialog.value = true;
+    return false;
+  }
+  return true;
+}
 
 watchEffect(() => {
   isConnect.value = app.globalData.ble.connected.value;
@@ -246,24 +258,34 @@ watchEffect(() => {
   }
 });
 
-function toSetting() {
-  Taro.openSetting();
-  toSettingDialogVisible.value = false;
-}
-
 function handleXiangXunNongDuChange(level: number) {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
+  const order = getHexOrder('nongdu', level);
+  Taro.writeBLECharacteristicValue({
+    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId,
+    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+    serviceId,
+    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+    characteristicId,
+    // 这里的value是ArrayBuffer类型
+    value: order,
+    success(res) {
+      console.log('writeBLECharacteristicValue success', res.errMsg);
+    }
+  });
   const animate = Taro.getCurrentInstance()?.page?.animate;
   if (animate) {
     animate(
       '#slider-block',
       [
         {
-          left: `${xiangXunNongDu.value * 155}rpx`,
+          left: `${(xiangXunNongDu.value - 1) * 310}rpx`,
           offset: 0,
           ease: 'ease-in-out'
         },
         {
-          left: `${level * 155}rpx`,
+          left: `${(level - 1) * 310}rpx`,
           offset: 1,
           ease: 'ease-in-out'
         }
@@ -282,14 +304,10 @@ function handleToAbout() {
   });
 }
 
-interface AuthSetting {
-  'scope.bluetooth': boolean;
-}
-
 async function handleToBluetooth() {
   const res = await app.globalData.ble.openBluetoothAdapter();
   if (!res) {
-    bleNotOpenDialog.value = true;
+    openBLENotOpenDialog();
     return;
   }
   navigateTo({
@@ -302,6 +320,7 @@ function buf2hex(buffer: ArrayBuffer) {
 }
 
 function kaiguanChange(value: boolean) {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('kaiguan', value);
   Taro.showToast({ title: `发送：${buf2hex(order)}` });
   // Taro.writeBLECharacteristicValue({
@@ -321,6 +340,7 @@ function kaiguanChange(value: boolean) {
 }
 
 function qiehuanHandler(num: number) {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('qiehuan', num);
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
@@ -338,6 +358,7 @@ function qiehuanHandler(num: number) {
 }
 
 function dengliziChange(value: boolean) {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('denglizi', value);
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
@@ -355,6 +376,7 @@ function dengliziChange(value: boolean) {
 }
 
 function meigeHandler() {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
   const num = false;
   const order = getHexOrder('meige', num);
   Taro.writeBLECharacteristicValue({
@@ -373,6 +395,7 @@ function meigeHandler() {
 }
 
 function gongzuoHandler() {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
   const num = false;
   const order = getHexOrder('gongzuo', num);
   Taro.writeBLECharacteristicValue({

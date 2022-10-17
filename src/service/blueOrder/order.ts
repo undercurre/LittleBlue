@@ -31,6 +31,10 @@ export function setOrderValue(type: string, value: number | boolean, arr: string
   if (type === 'kaiguan') {
     arr[1] = value ? '0x01' : '0x00';
   }
+  // 浓度 1 2
+  if (type === 'nongdu') {
+    arr[1] = value === 1 ? '0x01' : '0x02';
+  }
   // 可以切换香薰123
   if (type === 'qiehuan') {
     const temp = 202 + (value as number);
