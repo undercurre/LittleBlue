@@ -18,6 +18,10 @@ export function setOrderType(type: string, arr: string[]) {
       arr[0] = '0xF4';
     case 'gongzuo':
       arr[0] = '0xF5';
+		case 'nongdu':
+			arr[0] = '0xF6';
+		case 'fuwei':
+			arr[0] = '0xF9';
   }
 }
 
@@ -46,6 +50,16 @@ export function setOrderValue(type: string, value: number | boolean, arr: string
     const temp = value as number;
     arr[1] = temp.toString(16);
   }
+  // 浓度 1-2
+	if (type === 'nongdu') {
+		const temp = value as number;
+		arr[1] = temp.toString(16)
+	}
+	// 复位
+	if (type === 'fuwei') {
+		const temp = 85;
+		arr[1] = temp.toString(16)
+	}
 }
 
 // 获取一条十六进制字符串指令
