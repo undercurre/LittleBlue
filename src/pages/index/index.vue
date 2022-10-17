@@ -11,7 +11,11 @@
       <div class="absolute left-137px text-17px text-white">净化香薰系统</div>
     </div>
     <div class="mt-140rpx p-24rpx rounded-20rpx bg-white w-670rpx h-252rpx relative box-border">
-      <div class="absolute right-24rpx top-24rpx flex items-center" style="color: #999; font-size: 24rpx" @click="handlefuwei">
+      <div
+        class="absolute right-24rpx top-24rpx flex items-center"
+        style="color: #999; font-size: 24rpx"
+        @click="handlefuwei"
+      >
         <img :src="fuwei" style="width: 28rpx; height: 28rpx; margin-top: 2rpx; margin-right: 10rpx" />
         香水复位
       </div>
@@ -91,7 +95,12 @@
           >
             <img :src="kaiguan" style="width: 42rpx; height: 42rpx" />
           </div>
-          <nut-switch v-model="xiangxunkaiguanchecked" active-text="ON" inactive-text="OFF" @change="kaiguanChange" />
+          <nut-switch
+            :model-value="xiangxunkaiguanchecked"
+            active-text="ON"
+            inactive-text="OFF"
+            @change="kaiguanChange"
+          />
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
       </div>
@@ -139,7 +148,12 @@
           >
             <img :src="denglizi" style="width: 42rpx; height: 42rpx" />
           </div>
-          <nut-switch v-model="denglizikaiguanchecked" active-text="ON" inactive-text="OFF" @change="dengliziChange" />
+          <nut-switch
+            :model-value="denglizikaiguanchecked"
+            active-text="ON"
+            inactive-text="OFF"
+            @change="dengliziChange"
+          />
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
       </div>
@@ -320,29 +334,30 @@ function buf2hex(buffer: ArrayBuffer) {
 }
 
 function handlefuwei() {
-	if (!openBLENotConnectDialogIfNotConnect()) return;
-	const order = getHexOrder('kaiguan', 0);
-	Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  if (!openBLENotConnectDialogIfNotConnect()) return;
+  const order = getHexOrder('kaiguan', 0);
+  Taro.showToast({ title: `发送：${buf2hex(order)}` });
 }
 
 function kaiguanChange(value: boolean) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('kaiguan', value);
   Taro.showToast({ title: `发送：${buf2hex(order)}` });
-  // Taro.writeBLECharacteristicValue({
-  //   // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
-  //   deviceId,
-  //   // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
-  //   serviceId,
-  //   // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
-  //   characteristicId,
-  //   // 这里的value是ArrayBuffer类型
-  //   value: order,
-  //   success(res) {
-  //     Taro.showToast({ title: JSON.stringify(order) });
-  //     console.log('writeBLECharacteristicValue success', res.errMsg);
-  //   }
-  // });
+  Taro.writeBLECharacteristicValue({
+    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId,
+    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+    serviceId,
+    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+    characteristicId,
+    // 这里的value是ArrayBuffer类型
+    value: order,
+    success(res) {
+      Taro.showToast({ title: JSON.stringify(order) });
+      console.log('writeBLECharacteristicValue success', res.errMsg);
+    }
+  });
+  xiangxunkaiguanchecked.value = !xiangxunkaiguanchecked.value;
 }
 
 function qiehuanHandler(num: number) {
@@ -379,6 +394,7 @@ function dengliziChange(value: boolean) {
       console.log('writeBLECharacteristicValue success', res.errMsg);
     }
   });
+  denglizikaiguanchecked.value = !denglizikaiguanchecked.value;
 }
 
 function meigeHandler() {
