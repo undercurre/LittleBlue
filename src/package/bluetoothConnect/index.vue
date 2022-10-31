@@ -33,7 +33,7 @@
 import { ref, watchEffect } from 'vue';
 import Taro from '@tarojs/taro';
 import { useBle } from '@/hooks';
-import { serviceuuid, txduuid } from '../../config/uuid';
+import { rxduuid, serviceuuid, txduuid } from '../../config/uuid';
 definePageConfig({
   navigationBarTitleText: '蓝牙连接',
   navigationStyle: 'default',
@@ -110,14 +110,23 @@ async function checkServiceAndCharacteristic(deviceId: string) {
   }
   console.log('getBLEDeviceCharacteristics', res);
   let isWriteCharacteristic = false;
+  let isNotifyCharacteristic = false;
   res.characteristics.forEach((characteristic: any) => {
     if (characteristic.properties.write && characteristic.uuid === txduuid) {
       isWriteCharacteristic = true;
       app.globalData.ble.characteristicId.value = characteristic.uuid;
     }
+    if ((characteristic.properties.notify || characteristic.properties.indicate) && characteristic.uuid === rxduuid) {
+      isNotifyCharacteristic = true;
+      app.globalData.ble.notifyCharacteristic.value = characteristic.uuid;
+    }
   });
   if (!isWriteCharacteristic) {
     console.log('没找到正确的写数据特征值');
+    return false;
+  }
+  if (!isNotifyCharacteristic) {
+    console.log('没找到正确的读数据特征值');
     return false;
   }
   return true;

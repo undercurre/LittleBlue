@@ -28,6 +28,7 @@ export default function useCountDown() {
   const deviceId = ref(''); // 蓝牙设备ID
   const serviceId = ref(''); // 服务UUID
   const characteristicId = ref(''); // 写数据特征值UUID
+  const notifyCharacteristic = ref(''); // 监听设备返回数据的特征值
   const deviceName = ref('');
   const characteristics = ref<any[]>([]);
   const scaning = ref(false); // 是否在搜索
@@ -226,6 +227,7 @@ export default function useCountDown() {
     deviceId,
     serviceId,
     characteristicId,
+    notifyCharacteristic,
     discoveryStarted
   };
 }
