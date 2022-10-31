@@ -177,14 +177,14 @@
           <div
             class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
             style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-            @click="meigeHandler"
+            @click="showchixu = true"
           >
             每隔一秒
           </div>
           <div
             class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
             style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-            @click="gongzuoHandler"
+            @click="showchixu = true"
           >
             工作一秒
           </div>
@@ -205,6 +205,14 @@
     </div>
   </div>
   <nut-dialog v-model:visible="bleNotWorkDialog" :title="dialogTitle" :content="dialogContent" no-cancel-btn />
+	<nut-picker
+		v-model="selectedchixu"
+		v-model:visible="showchixu"
+		:columns="multiplechixuColumns"
+		title="香氛设置"
+		@confirm="changechixu"
+	>
+	</nut-picker>
 </template>
 
 <script lang="ts" setup>
@@ -226,6 +234,35 @@ import denglizi from '../../assets/images/denglizi.png';
 import qiehuan from '../../assets/images/qiehuan.png';
 import shezhi from '../../assets/images/shezhi.png';
 import shezhiIcon from '../../assets/images/shezhiIcon.png';
+
+// chixu
+const showchixu = ref(false);
+const selectedchixu = ref(['Wednesday','Afternoon']);
+const desc = ref('');
+const multiplechixuColumns = ref([
+	// 第一列
+	[
+		{ text: '周一', value: 'Monday' },
+		{ text: '周二', value: 'Tuesday' },
+		{ text: '周三', value: 'Wednesday' },
+		{ text: '周四', value: 'Thursday' },
+		{ text: '周五', value: 'Friday' }
+	],
+	// 第二列
+	[
+		{ text: '上午', value: 'Morning' },
+		{ text: '下午', value: 'Afternoon' },
+		{ text: '晚上', value: 'Evening' }
+	]
+]);
+
+const confirmchixu = ( { selectedValue,selectedOptions })=>{
+	desc.value = selectedValue.join(',');
+}
+const changechixu = ({ selectedValue,selectedOptions }) => {
+	console.log(selectedValue);
+};
+
 
 const app = Taro.getApp();
 
@@ -255,12 +292,12 @@ function openBLENotOpenDialog() {
 
 // 如果没连接蓝牙，调用这个方法弹窗，并返回是否已连接
 function openBLENotConnectDialogIfNotConnect() {
-  if (!isConnect.value) {
-    dialogTitle.value = '操作错误';
-    dialogContent.value = '请连接蓝牙再进行操作';
-    bleNotWorkDialog.value = true;
-    return false;
-  }
+  // if (!isConnect.value) {
+  //   dialogTitle.value = '操作错误';
+  //   dialogContent.value = '请连接蓝牙再进行操作';
+  //   bleNotWorkDialog.value = true;
+  //   return false;
+  // }
   return true;
 }
 
@@ -342,7 +379,7 @@ function buf2hex(buffer: ArrayBuffer) {
 
 function handlefuwei() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
-  const order = getHexOrder('kaiguan', 0);
+  const order = getHexOrder('fuwei', 85);
 }
 
 function kaiguanChange(value: boolean) {
@@ -367,6 +404,7 @@ function kaiguanChange(value: boolean) {
 function qiehuanHandler(num: number) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('qiehuan', num);
+	Taro.showToast({ title: `发送：${buf2hex(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -385,6 +423,7 @@ function qiehuanHandler(num: number) {
 function dengliziChange(value: boolean) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('denglizi', value);
+	Taro.showToast({ title: `发送：${buf2hex(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -403,8 +442,9 @@ function dengliziChange(value: boolean) {
 
 function meigeHandler() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
-  const num = false;
+  const num = 1;
   const order = getHexOrder('meige', num);
+	Taro.showToast({ title: `发送：${buf2hex(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -422,8 +462,9 @@ function meigeHandler() {
 
 function gongzuoHandler() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
-  const num = false;
+  const num = 1;
   const order = getHexOrder('gongzuo', num);
+	Taro.showToast({ title: `发送：${buf2hex(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
