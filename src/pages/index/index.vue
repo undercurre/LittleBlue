@@ -46,7 +46,7 @@
       </div>
       <div class="flex items-center" style="font-weight: 700; font-size: 29rpx">
         <div class="w-108rpx h-108rpx rounded-full flex justify-center items-center mr-24rpx gradient">
-          <img :src="nongdu" style="width: 30rpx; height: 40rpx" />
+          <img :src="shengyu" style="width: 40rpx; height: 42rpx" />
         </div>
         香氛剩余量
       </div>
@@ -93,7 +93,7 @@
             class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
             style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
           >
-            <img :src="kaiguan" style="width: 42rpx; height: 42rpx" />
+            <img :src="kaiguan" style="width: 29rpx; height: 32rpx" />
           </div>
           <nut-switch
             :model-value="xiangxunkaiguanchecked"
@@ -110,7 +110,7 @@
             class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
             style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
           >
-            <img :src="qiehuan" style="width: 42rpx; height: 42rpx" />
+            <img :src="qiehuan" style="width: 32rpx; height: 32rpx" />
           </div>
           <h3 style="font-size: 30rpx; font-weight: 700">香氛切换</h3>
         </div>
@@ -146,7 +146,7 @@
             class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
             style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
           >
-            <img :src="denglizi" style="width: 42rpx; height: 42rpx" />
+            <img :src="denglizi" style="width: 30rpx; height: 39rpx" />
           </div>
           <nut-switch
             :model-value="denglizikaiguanchecked"
@@ -163,7 +163,7 @@
             class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
             style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
           >
-            <img :src="shezhi" style="width: 42rpx; height: 42rpx" />
+            <img :src="shezhi" style="width: 24rpx; height: 30rpx" />
           </div>
           <h3 style="font-size: 30rpx; font-weight: 700">香氛设置</h3>
         </div>
@@ -198,7 +198,7 @@
         <span class="ml-9px">关于我们</span>
       </div>
       <div class="w-2px h-32rpx bg-black rounded-2px"></div>
-      <div class="flex flex-1 justify-center items-center">
+      <div class="flex flex-1 justify-center items-center" @click="handleToConnect">
         <img :src="lianxi" style="width: 42rpx; height: 42rpx" />
         <span class="ml-9px">联系方式</span>
       </div>
@@ -217,6 +217,7 @@ import bluetooth from '../../assets/images/bluetooth.png';
 import unconnect from '../../assets/images/unconnect.png';
 import fuwei from '../../assets/images/fuwei.png';
 import nongdu from '../../assets/images/nongdu.png';
+import shengyu from '../../assets/images/shengyu.png';
 import shadow from '../../assets/images/shadow.png';
 import guanyu from '../../assets/images/guanyu.png';
 import lianxi from '../../assets/images/lianxi.png';
@@ -318,6 +319,12 @@ function handleToAbout() {
   });
 }
 
+function handleToConnect() {
+  navigateTo({
+    url: '/package/connect/index'
+  });
+}
+
 async function handleToBluetooth() {
   const res = await app.globalData.ble.openBluetoothAdapter();
   if (!res) {
@@ -336,13 +343,11 @@ function buf2hex(buffer: ArrayBuffer) {
 function handlefuwei() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('kaiguan', 0);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
 }
 
 function kaiguanChange(value: boolean) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('kaiguan', value);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -353,7 +358,6 @@ function kaiguanChange(value: boolean) {
     // 这里的value是ArrayBuffer类型
     value: order,
     success(res) {
-      Taro.showToast({ title: JSON.stringify(order) });
       console.log('writeBLECharacteristicValue success', res.errMsg);
     }
   });
@@ -472,5 +476,17 @@ span {
   top: 0;
   border-radius: 20rpx;
   background: linear-gradient(180deg, #85cffd 0%, #c2e2f5 100%);
+}
+
+.nut-switch-label {
+  font-size: 22rpx !important;
+}
+
+.nut-switch-label.close {
+  transform: translateX(42rpx) !important;
+}
+
+.nut-switch-label.open {
+  transform: translateX(-42rpx) !important;
 }
 </style>

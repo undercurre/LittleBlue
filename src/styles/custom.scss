@@ -1,2 +1,14 @@
 $primary-color: #1890ff;
 $primary-color-end: #1890ff;
+
+// Switch
+$switch-close-bg-color: #ebebeb;
+$switch-close--cline-bg-color: #f0f0f0;
+$switch-width: 48px;
+$switch-height: 24px;
+$switch-line-height: 21px;
+$switch-border-radius: 99px;
+$switch-inside-width: 21px;
+$switch-inside-height: 21px;
+$switch-inside-open-transform: translateX(118%);
+$switch-inside-close-transform: translateX(10%);

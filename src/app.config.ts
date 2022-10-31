@@ -11,7 +11,7 @@ export default defineAppConfig({
   subPackages: [
     {
       root: 'package',
-      pages: ['packageA/index', 'about/index', 'packageC/index', 'bluetoothConnect/index']
+      pages: ['connect/index', 'about/index', 'bluetoothConnect/index']
     }
   ]
 });

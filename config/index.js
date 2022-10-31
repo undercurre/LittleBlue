@@ -30,8 +30,8 @@ const config = {
     ? ['@tarojs/plugin-html', '@tarojs/plugin-vue-devtools', 'taro-plugin-pinia']
     : ['@tarojs/plugin-html', 'taro-plugin-pinia'],
   sass: {
-    resource: [path.resolve(__dirname, '..', 'src/styles/custom.scss')],
-    data: `@import "@nutui/nutui-taro/dist/styles/variables.scss";`
+    // resource: [path.resolve(__dirname, '..', 'src/styles/custom.scss')],
+    data: `@import "@nutui/nutui-taro/dist/styles/variables.scss";@import "src/styles/custom.scss";`
   },
   defineConstants: {},
   copy: {
