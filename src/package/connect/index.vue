@@ -1,6 +1,5 @@
 <template>
-  <div class="flex items-center flex-col">
-  </div>
+  <div class="flex items-center flex-col"></div>
 </template>
 <script lang="ts" setup>
 definePageConfig({
