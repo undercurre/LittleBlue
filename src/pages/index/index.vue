@@ -53,7 +53,7 @@
       <div class="mt-32rpx">
         <div class="relative">
           <nut-progress
-            percentage="100"
+            :percentage="xiangxunAshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -64,7 +64,7 @@
         </div>
         <div class="mt-16rpx relative">
           <nut-progress
-            percentage="75"
+            :percentage="xiangxunBshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -75,7 +75,7 @@
         </div>
         <div class="mt-16rpx relative">
           <nut-progress
-            percentage="25"
+            :percentage="xiangxunCshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -104,12 +104,6 @@
             @click="kaiguanChange(false)"
           />
           <img v-else :src="btnOff" style="width: 126rpx; height: 126rpx" @click="kaiguanChange(true)" />
-          <!-- <nut-switch
-						:model-value="xiangxunkaiguanchecked"
-						active-text="ON"
-						inactive-text="OFF"
-						@change="kaiguanChange"
-					/> -->
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
       </div>
@@ -125,19 +119,22 @@
         </div>
         <div class="flex flex-col justify-between">
           <div
-            class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            :style="{ backgroundColor: xiangxunleixing === 0 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(1)"
           >
             香氛A
           </div>
           <div
-            class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            :style="{ backgroundColor: xiangxunleixing === 1 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(2)"
           >
             香氛B
           </div>
           <div
-            class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            :style="{ backgroundColor: xiangxunleixing === 2 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(3)"
           >
             香氛C
@@ -163,12 +160,6 @@
             @click="dengliziChange(false)"
           />
           <img v-else :src="btnOff" style="width: 126rpx; height: 126rpx" @click="dengliziChange(true)" />
-          <!-- <nut-switch
-						:model-value="denglizikaiguanchecked"
-						active-text="ON"
-						inactive-text="OFF"
-						@change="dengliziChange"
-					/> -->
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
       </div>
@@ -316,6 +307,7 @@ import { navigateTo, default as Taro } from '@tarojs/taro';
 import { PickerViewColumn } from '@tarojs/components';
 import { getHexOrder } from '@/service/blueOrder/order';
 import { useBle } from '../../hooks';
+import { convertTo16Str } from '../../utils/hex';
 import bg from '../../assets/images/bg.png';
 import bluetooth from '../../assets/images/bluetooth.png';
 import unconnect from '../../assets/images/unconnect.png';
@@ -371,6 +363,10 @@ if (!app.globalData) {
 const xiangXunNongDu = ref(0);
 const xiangxunkaiguanchecked = ref(true);
 const denglizikaiguanchecked = ref(true);
+const xiangxunAshengyu = ref(100);
+const xiangxunBshengyu = ref(100);
+const xiangxunCshengyu = ref(100);
+const xiangxunleixing = ref(0); // 香薰类型： 0 A 1 B 2C
 const isConnect = ref(false);
 let deviceId = '';
 let serviceId = '';
@@ -413,7 +409,7 @@ watchEffect(() => {
       success(res) {
         console.log('notifyBLECharacteristicValueChange', res);
         Taro.onBLECharacteristicValueChange(res1 => {
-          Taro.showToast({ title: `接收到：${buf2hex(res1.value)}` });
+          Taro.showToast({ title: `接收到：${convertTo16Str(res1.value)}` });
         });
       }
     });
@@ -429,22 +425,7 @@ watchEffect(() => {
   }
 });
 
-function handleXiangXunNongDuChange(level: number) {
-  if (!openBLENotConnectDialogIfNotConnect()) return;
-  const order = getHexOrder('nongdu', level);
-  Taro.writeBLECharacteristicValue({
-    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
-    deviceId,
-    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
-    serviceId,
-    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
-    characteristicId,
-    // 这里的value是ArrayBuffer类型
-    value: order,
-    success(res) {
-      console.log('writeBLECharacteristicValue success', res.errMsg);
-    }
-  });
+function xiangXunNongDuHuaDong(level: number) {
   const animate = Taro.getCurrentInstance()?.page?.animate;
   if (animate) {
     animate(
@@ -465,7 +446,25 @@ function handleXiangXunNongDuChange(level: number) {
       () => {}
     );
   }
+}
 
+function handleXiangXunNongDuChange(level: number) {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
+  const order = getHexOrder('nongdu', level);
+  Taro.writeBLECharacteristicValue({
+    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId,
+    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+    serviceId,
+    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+    characteristicId,
+    // 这里的value是ArrayBuffer类型
+    value: order,
+    success(res) {
+      console.log('writeBLECharacteristicValue success', res.errMsg);
+    }
+  });
+  xiangXunNongDuHuaDong(level);
   xiangXunNongDu.value = level;
 }
 
@@ -490,11 +489,6 @@ async function handleToBluetooth() {
   navigateTo({
     url: '/package/bluetoothConnect/index'
   });
-}
-
-// @todo: 换到util
-function buf2hex(buffer: ArrayBuffer) {
-  return Array.prototype.map.call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2)).join('');
 }
 
 function handlefuwei() {
@@ -537,7 +531,7 @@ function kaiguanChange(value: boolean) {
 function qiehuanHandler(num: number) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('qiehuan', num);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -556,7 +550,7 @@ function qiehuanHandler(num: number) {
 function dengliziChange(value: boolean) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('denglizi', value);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -577,7 +571,7 @@ function meigeHandler() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const num = meige.value[0];
   const order = getHexOrder('meige', num);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -595,9 +589,9 @@ function meigeHandler() {
 
 function gongzuoHandler() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
-  const num  = gongzuo.value[0];
+  const num = gongzuo.value[0];
   const order = getHexOrder('gongzuo', num);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -625,7 +619,7 @@ span {
 }
 
 .box-shadow {
-  box-shadow: 0px -8 rpx 30px rgba(0, 0, 0, 0.05);
+  box-shadow: 0px -8rpx 30px rgba(0, 0, 0, 0.05);
 }
 
 .gradient {
@@ -634,7 +628,7 @@ span {
 
 .white-text {
   font-weight: 500;
-  font-size: 20 rpx;
+  font-size: 20rpx;
   color: #ffffff;
 }
 
@@ -644,23 +638,23 @@ span {
 
 .slider-block {
   position: absolute;
-  width: 155 rpx;
-  height: 80 rpx;
+  width: 155rpx;
+  height: 80rpx;
   left: 0;
   top: 0;
-  border-radius: 20 rpx;
+  border-radius: 20rpx;
   background: linear-gradient(180deg, #85cffd 0%, #c2e2f5 100%);
 }
 
 .nut-switch-label {
-  font-size: 22 rpx !important;
+  font-size: 22rpx !important;
 }
 
 .nut-switch-label.close {
-  transform: translateX(42 rpx) !important;
+  transform: translateX(42rpx) !important;
 }
 
 .nut-switch-label.open {
-  transform: translateX(-42 rpx) !important;
+  transform: translateX(-42rpx) !important;
 }
 </style>
