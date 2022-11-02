@@ -53,7 +53,7 @@
       <div class="mt-32rpx">
         <div class="relative">
           <nut-progress
-            :percentage="xiangxunAshengyu"
+						:percentage="xiangxunAshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -64,7 +64,7 @@
         </div>
         <div class="mt-16rpx relative">
           <nut-progress
-            :percentage="xiangxunBshengyu"
+						:percentage="xiangxunBshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -75,7 +75,7 @@
         </div>
         <div class="mt-16rpx relative">
           <nut-progress
-            :percentage="xiangxunCshengyu"
+						:percentage="xiangxunCshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -104,12 +104,6 @@
             @click="kaiguanChange(false)"
           />
           <img v-else :src="btnOff" style="width: 126rpx; height: 126rpx" @click="kaiguanChange(true)" />
-          <!-- <nut-switch
-            :model-value="xiangxunkaiguanchecked"
-            active-text="ON"
-            inactive-text="OFF"
-            @change="kaiguanChange"
-          /> -->
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
       </div>
@@ -126,22 +120,21 @@
         <div class="flex flex-col justify-between">
           <div
             class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
-            :style="{ backgroundColor: xiangxunleixing === 0 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(1)"
           >
             香氛A
           </div>
           <div
             class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
-            :style="{ backgroundColor: xiangxunleixing === 1 ? '#008EE5' : '#D9D9D9' }"
-            @click="qiehuanHandler(2)"
+						:style="{ backgroundColor: xiangxunleixing === 1 ? '#008EE5' : '#D9D9D9' }"
+						@click="qiehuanHandler(2)"
           >
             香氛B
           </div>
           <div
             class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
-            :style="{ backgroundColor: xiangxunleixing === 2 ? '#008EE5' : '#D9D9D9' }"
-            @click="qiehuanHandler(3)"
+						:style="{ backgroundColor: xiangxunleixing === 2 ? '#008EE5' : '#D9D9D9' }"
+						@click="qiehuanHandler(3)"
           >
             香氛C
           </div>
@@ -166,12 +159,6 @@
             @click="dengliziChange(false)"
           />
           <img v-else :src="btnOff" style="width: 126rpx; height: 126rpx" @click="dengliziChange(true)" />
-          <!-- <nut-switch
-            :model-value="denglizikaiguanchecked"
-            active-text="ON"
-            inactive-text="OFF"
-            @change="dengliziChange"
-          /> -->
         </div>
         <h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
       </div>
@@ -223,14 +210,38 @@
     </div>
   </div>
   <nut-dialog v-model:visible="bleNotWorkDialog" :title="dialogTitle" :content="dialogContent" no-cancel-btn />
-  <nut-picker
-    v-model="selectedchixu"
-    v-model:visible="showchixu"
-    :columns="multiplechixuColumns"
-    title="香氛设置"
-    @confirm="changechixu"
-  >
-  </nut-picker>
+	<nut-popup position="bottom" :style="{ height: '41%' }" v-model:visible="showchixu" :z-index="100" :round="true">
+		<div
+			style="display: flex; justify-content: space-between; align-items: center; margin-top: 32rpx; padding: 0 44rpx">
+			<div></div>
+			<span style="font-size: 15px;font-weight: 700">香氛设置</span>
+			<nut-icon name="close" size="12"></nut-icon>
+		</div>
+		<div style="display: flex; flex-direction: column; padding-left: 93rpx">
+			<div style="display: flex; align-items: center; margin-bottom: 40rpx">
+				<img v-if="false" :src="selected" style="width: 28rpx; height: 28rpx; margin-right: 37rpx" />
+				<img v-if="!false" :src="unselect" style="width: 28rpx; height: 28rpx; margin-right: 37rpx" />
+				<span style="font-size: 14px">每隔</span>
+				<PickerColumn
+					:column="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60]"
+				></PickerColumn>
+				<span style="font-size: 14px; margin-right: 65rpx">秒</span>
+				<span style="font-size: 14px">工作</span>
+				<PickerColumn
+					:column="[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60]"
+				></PickerColumn>
+				<span style="font-size: 14px;">秒</span>
+			</div>
+			<div style="display: flex; align-items: center">
+				<img v-if="true" :src="selected" style="width: 28rpx; height: 28rpx; margin-right: 37rpx" />
+				<img v-if="!true" :src="unselect" style="width: 28rpx; height: 28rpx; margin-right: 37rpx" />
+				<span style="font-size: 14px">持续工作</span>
+			</div>
+		</div>
+		<div style="display: flex; padding: 71rpx 40rpx; justify-content: space-between">
+			<nut-button style="width: 322rpx" type="default">取消</nut-button><nut-button color="#008EE5" style="width: 322rpx" type="info">确认</nut-button>
+		</div>
+	</nut-popup>
 </template>
 
 <script lang="ts" setup>
@@ -239,6 +250,7 @@ import { navigateTo, default as Taro } from '@tarojs/taro';
 import { getHexOrder } from '@/service/blueOrder/order';
 import { useBle } from '../../hooks';
 import { convertTo16Str } from '../../utils/hex';
+import PickerColumn from "@/components/PickerColumn.vue";
 import bg from '../../assets/images/bg.png';
 import bluetooth from '../../assets/images/bluetooth.png';
 import unconnect from '../../assets/images/unconnect.png';
@@ -253,44 +265,30 @@ import denglizi from '../../assets/images/denglizi.png';
 import qiehuan from '../../assets/images/qiehuan.png';
 import shezhi from '../../assets/images/shezhi.png';
 import shezhiIcon from '../../assets/images/shezhiIcon.png';
+import selected from '../../assets/images/selected.png';
+import unselect from '../../assets/images/unselect.png';
 import btnOn from '../../assets/images/btnOn.png';
 import btnOff from '../../assets/images/btnOff.png';
 
 // chixu
+const chixuSwitch = ref(false)
 const showchixu = ref(false);
-const selectedchixu = ref(['Wednesday', 'Afternoon']);
 const desc = ref('');
-const multiplechixuColumns = ref([
-  // 第一列
-  [
-    { text: '周一', value: 'Monday' },
-    { text: '周二', value: 'Tuesday' },
-    { text: '周三', value: 'Wednesday' },
-    { text: '周四', value: 'Thursday' },
-    { text: '周五', value: 'Friday' }
-  ],
-  // 第二列
-  [
-    { text: '上午', value: 'Morning' },
-    { text: '下午', value: 'Afternoon' },
-    { text: '晚上', value: 'Evening' }
-  ]
-]);
 
-const confirmchixu = ({ selectedValue, selectedOptions }) => {
-  desc.value = selectedValue.join(',');
+const confirmchixu = ({selectedValue, selectedOptions}) => {
+	desc.value = selectedValue.join(',');
 };
-const changechixu = ({ selectedValue, selectedOptions }) => {
-  console.log(selectedValue);
+const changechixu = ({selectedValue, selectedOptions}) => {
+	console.log(selectedValue);
 };
 
 const app = Taro.getApp();
 
 if (!app.globalData) {
-  app.globalData = {};
-  app.globalData.ble = useBle();
+	app.globalData = {};
+	app.globalData.ble = useBle();
 } else if (!app.globalData.ble) {
-  app.globalData.ble = useBle();
+	app.globalData.ble = useBle();
 }
 
 const xiangXunNongDu = ref(0);
@@ -324,40 +322,6 @@ function openBLENotConnectDialogIfNotConnect() {
   //   return false;
   // }
   return true;
-}
-
-function deviceDataTransform(data: ArrayBuffer) {
-  const uint8Arr = new Uint8Array(data);
-  if (uint8Arr[0] === 0xf1) {
-    // a组数据
-    if (typeof uint8Arr[1] === 'number') {
-      xiangxunkaiguanchecked.value = Boolean((uint8Arr[1] & 1) === 0);
-      denglizikaiguanchecked.value = Boolean((uint8Arr[1] & 2) === 0);
-      xiangXunNongDu.value = (uint8Arr[1] & 2) === 0 ? 1 : 2;
-      xiangXunNongDuHuaDong(xiangXunNongDu.value);
-    }
-    if (typeof uint8Arr[2] === 'number') {
-      // 间隔时间 = uint8Arr[2]
-    }
-    if (typeof uint8Arr[3] === 'number') {
-      // 工作时间 = uint8Arr[3]
-    }
-  } else {
-    // b组数据
-    if (typeof uint8Arr[1] === 'number') {
-      // eslint-disable-next-line no-nested-ternary
-      xiangxunleixing.value = uint8Arr[1] === 1 ? 0 : uint8Arr[1] === 2 ? 1 : 2;
-    }
-    if (typeof uint8Arr[2] === 'number') {
-      xiangxunAshengyu.value = uint8Arr[2];
-    }
-    if (typeof uint8Arr[3] === 'number') {
-      xiangxunBshengyu.value = uint8Arr[3];
-    }
-    if (typeof uint8Arr[4] === 'number') {
-      xiangxunCshengyu.value = uint8Arr[4];
-    }
-  }
 }
 
 watchEffect(() => {
@@ -459,8 +423,21 @@ async function handleToBluetooth() {
 }
 
 function handlefuwei() {
-  if (!openBLENotConnectDialogIfNotConnect()) return;
-  const order = getHexOrder('fuwei', 85);
+	if (!openBLENotConnectDialogIfNotConnect()) return;
+	const order = getHexOrder('fuwei', 85);
+	Taro.writeBLECharacteristicValue({
+		// 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+		deviceId,
+		// 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+		serviceId,
+		// 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+		characteristicId,
+		// 这里的value是ArrayBuffer类型
+		value: order,
+		success(res) {
+			console.log('writeBLECharacteristicValue success', res.errMsg);
+		}
+	});
 }
 
 function kaiguanChange(value: boolean) {
