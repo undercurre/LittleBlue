@@ -53,7 +53,7 @@
       <div class="mt-32rpx">
         <div class="relative">
           <nut-progress
-            percentage="100"
+            :percentage="xiangxunAshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -64,7 +64,7 @@
         </div>
         <div class="mt-16rpx relative">
           <nut-progress
-            percentage="75"
+            :percentage="xiangxunBshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -75,7 +75,7 @@
         </div>
         <div class="mt-16rpx relative">
           <nut-progress
-            percentage="25"
+            :percentage="xiangxunCshengyu"
             status="active"
             :text-inside="true"
             stroke-width="20"
@@ -125,19 +125,22 @@
         </div>
         <div class="flex flex-col justify-between">
           <div
-            class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            :style="{ backgroundColor: xiangxunleixing === 0 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(1)"
           >
             香氛A
           </div>
           <div
-            class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            :style="{ backgroundColor: xiangxunleixing === 1 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(2)"
           >
             香氛B
           </div>
           <div
-            class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            class="w-126rpx h-51rpx text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
+            :style="{ backgroundColor: xiangxunleixing === 2 ? '#008EE5' : '#D9D9D9' }"
             @click="qiehuanHandler(3)"
           >
             香氛C
@@ -235,6 +238,7 @@ import { ref, watchEffect } from 'vue';
 import { navigateTo, default as Taro } from '@tarojs/taro';
 import { getHexOrder } from '@/service/blueOrder/order';
 import { useBle } from '../../hooks';
+import { convertTo16Str } from '../../utils/hex';
 import bg from '../../assets/images/bg.png';
 import bluetooth from '../../assets/images/bluetooth.png';
 import unconnect from '../../assets/images/unconnect.png';
@@ -292,6 +296,10 @@ if (!app.globalData) {
 const xiangXunNongDu = ref(0);
 const xiangxunkaiguanchecked = ref(true);
 const denglizikaiguanchecked = ref(true);
+const xiangxunAshengyu = ref(100);
+const xiangxunBshengyu = ref(100);
+const xiangxunCshengyu = ref(100);
+const xiangxunleixing = ref(0); // 香薰类型： 0 A 1 B 2C
 const isConnect = ref(false);
 let deviceId = '';
 let serviceId = '';
@@ -318,6 +326,40 @@ function openBLENotConnectDialogIfNotConnect() {
   return true;
 }
 
+function deviceDataTransform(data: ArrayBuffer) {
+  const uint8Arr = new Uint8Array(data);
+  if (uint8Arr[0] === 0xf1) {
+    // a组数据
+    if (typeof uint8Arr[1] === 'number') {
+      xiangxunkaiguanchecked.value = Boolean((uint8Arr[1] & 1) === 0);
+      denglizikaiguanchecked.value = Boolean((uint8Arr[1] & 2) === 0);
+      xiangXunNongDu.value = (uint8Arr[1] & 2) === 0 ? 1 : 2;
+      xiangXunNongDuHuaDong(xiangXunNongDu.value);
+    }
+    if (typeof uint8Arr[2] === 'number') {
+      // 间隔时间 = uint8Arr[2]
+    }
+    if (typeof uint8Arr[3] === 'number') {
+      // 工作时间 = uint8Arr[3]
+    }
+  } else {
+    // b组数据
+    if (typeof uint8Arr[1] === 'number') {
+      // eslint-disable-next-line no-nested-ternary
+      xiangxunleixing.value = uint8Arr[1] === 1 ? 0 : uint8Arr[1] === 2 ? 1 : 2;
+    }
+    if (typeof uint8Arr[2] === 'number') {
+      xiangxunAshengyu.value = uint8Arr[2];
+    }
+    if (typeof uint8Arr[3] === 'number') {
+      xiangxunBshengyu.value = uint8Arr[3];
+    }
+    if (typeof uint8Arr[4] === 'number') {
+      xiangxunCshengyu.value = uint8Arr[4];
+    }
+  }
+}
+
 watchEffect(() => {
   isConnect.value = app.globalData.ble.connected.value;
   if (isConnect.value) {
@@ -334,7 +376,7 @@ watchEffect(() => {
       success(res) {
         console.log('notifyBLECharacteristicValueChange', res);
         Taro.onBLECharacteristicValueChange(res1 => {
-          Taro.showToast({ title: `接收到：${buf2hex(res1.value)}` });
+          Taro.showToast({ title: `接收到：${convertTo16Str(res1.value)}` });
         });
       }
     });
@@ -350,22 +392,7 @@ watchEffect(() => {
   }
 });
 
-function handleXiangXunNongDuChange(level: number) {
-  if (!openBLENotConnectDialogIfNotConnect()) return;
-  const order = getHexOrder('nongdu', level);
-  Taro.writeBLECharacteristicValue({
-    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
-    deviceId,
-    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
-    serviceId,
-    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
-    characteristicId,
-    // 这里的value是ArrayBuffer类型
-    value: order,
-    success(res) {
-      console.log('writeBLECharacteristicValue success', res.errMsg);
-    }
-  });
+function xiangXunNongDuHuaDong(level: number) {
   const animate = Taro.getCurrentInstance()?.page?.animate;
   if (animate) {
     animate(
@@ -386,7 +413,25 @@ function handleXiangXunNongDuChange(level: number) {
       () => {}
     );
   }
+}
 
+function handleXiangXunNongDuChange(level: number) {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
+  const order = getHexOrder('nongdu', level);
+  Taro.writeBLECharacteristicValue({
+    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId,
+    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+    serviceId,
+    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+    characteristicId,
+    // 这里的value是ArrayBuffer类型
+    value: order,
+    success(res) {
+      console.log('writeBLECharacteristicValue success', res.errMsg);
+    }
+  });
+  xiangXunNongDuHuaDong(level);
   xiangXunNongDu.value = level;
 }
 
@@ -411,11 +456,6 @@ async function handleToBluetooth() {
   navigateTo({
     url: '/package/bluetoothConnect/index'
   });
-}
-
-// @todo: 换到util
-function buf2hex(buffer: ArrayBuffer) {
-  return Array.prototype.map.call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2)).join('');
 }
 
 function handlefuwei() {
@@ -445,7 +485,7 @@ function kaiguanChange(value: boolean) {
 function qiehuanHandler(num: number) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('qiehuan', num);
-  // Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -464,7 +504,7 @@ function qiehuanHandler(num: number) {
 function dengliziChange(value: boolean) {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const order = getHexOrder('denglizi', value);
-  // Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -485,7 +525,7 @@ function meigeHandler() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const num = 1;
   const order = getHexOrder('meige', num);
-  // Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  // Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,
@@ -505,7 +545,7 @@ function gongzuoHandler() {
   if (!openBLENotConnectDialogIfNotConnect()) return;
   const num = 1;
   const order = getHexOrder('gongzuo', num);
-  Taro.showToast({ title: `发送：${buf2hex(order)}` });
+  Taro.showToast({ title: `发送：${convertTo16Str(order)}` });
   Taro.writeBLECharacteristicValue({
     // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
     deviceId,

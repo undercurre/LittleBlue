@@ -11,7 +11,6 @@ export function binStr2Array(str: string) {
 }
 
 // 数组转16进制字符串
-export function convertTo16Str(byteArray: number[]) {
-  if (!byteArray || !byteArray.length || byteArray.length === 0) return '';
-  return byteArray.map(byte => byte.toString(16).toLowerCase().padStart(2, '0')).join('');
+export function convertTo16Str(buffer: ArrayBuffer) {
+  return Array.prototype.map.call(new Uint8Array(buffer), x => `00${x.toString(16)}`.slice(-2)).join('');
 }
