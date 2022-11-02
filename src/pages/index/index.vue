@@ -1,11 +1,11 @@
 <template>
 	<div class="bg-[#f8f8f8] h-100vh w-750rpx fixed top-0" style="z-index: -1000"></div>
-	<img :src="bg" style="position: fixed; width: 750rpx; height: 372rpx; top: 0; z-index: -100"/>
+	<img :src="bg" style="position: fixed; width: 750rpx; height: 372rpx; top: 0; z-index: -100" />
 	<div class="flex flex-col items-center">
 		<div class="relative mt-108rpx w-750rpx h-48rpx flex items-center">
 			<div class="flex items-center p-40rpx text-24rpx text-white" @click="handleToBluetooth">
-				<img v-if="isConnect" :src="bluetooth" style="width: 19rpx; height: 34rpx; margin-right: 4rpx"/>
-				<img v-else :src="unconnect" style="width: 48rpx; height: 40rpx; margin-right: 4rpx"/>
+				<img v-if="isConnect" :src="bluetooth" style="width: 19rpx; height: 34rpx; margin-right: 4rpx" />
+				<img v-else :src="unconnect" style="width: 48rpx; height: 40rpx; margin-right: 4rpx" />
 				{{ isConnect ? '已连接' : '未连接' }}
 			</div>
 			<div class="absolute left-137px text-17px text-white">净化香薰系统</div>
@@ -16,12 +16,12 @@
 				style="color: #999; font-size: 24rpx"
 				@click="handlefuwei"
 			>
-				<img :src="fuwei" style="width: 28rpx; height: 28rpx; margin-top: 2rpx; margin-right: 10rpx"/>
+				<img :src="fuwei" style="width: 28rpx; height: 28rpx; margin-top: 2rpx; margin-right: 10rpx" />
 				香水复位
 			</div>
 			<div class="flex items-center" style="font-weight: 700; font-size: 29rpx">
 				<div class="w-108rpx h-108rpx rounded-full flex justify-center items-center mr-24rpx gradient">
-					<img :src="nongdu" style="width: 30rpx; height: 40rpx"/>
+					<img :src="nongdu" style="width: 30rpx; height: 40rpx" />
 				</div>
 				香氛浓度
 			</div>
@@ -42,11 +42,11 @@
 		</div>
 		<div class="mt-40rpx p-24rpx rounded-20rpx bg-white w-670rpx relative box-border">
 			<div class="absolute right-50rpx top-36rpx">
-				<img :src="shadow" style="height: 200rpx; width: 200rpx"/>
+				<img :src="shadow" style="height: 200rpx; width: 200rpx" />
 			</div>
 			<div class="flex items-center" style="font-weight: 700; font-size: 29rpx">
 				<div class="w-108rpx h-108rpx rounded-full flex justify-center items-center mr-24rpx gradient">
-					<img :src="shengyu" style="width: 40rpx; height: 42rpx"/>
+					<img :src="shengyu" style="width: 40rpx; height: 42rpx" />
 				</div>
 				香氛剩余量
 			</div>
@@ -87,51 +87,57 @@
 			</div>
 		</div>
 		<div class="flex w-670rpx justify-between mt-40rpx">
-			<div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex flex-col justify-between">
+			<div
+				class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx pt-10rpx pr-16rpx box-border flex flex-col justify-between"
+			>
 				<div class="flex justify-between items-center">
 					<div
 						class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
 						style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
 					>
-						<img :src="kaiguan" style="width: 29rpx; height: 32rpx"/>
+						<img :src="kaiguan" style="width: 29rpx; height: 32rpx" />
 					</div>
-					<nut-switch
+					<img
+						v-if="xiangxunkaiguanchecked"
+						:src="btnOn"
+						style="width: 126rpx; height: 126rpx"
+						@click="kaiguanChange(false)"
+					/>
+					<img v-else :src="btnOff" style="width: 126rpx; height: 126rpx" @click="kaiguanChange(true)" />
+					<!-- <nut-switch
 						:model-value="xiangxunkaiguanchecked"
 						active-text="ON"
 						inactive-text="OFF"
 						@change="kaiguanChange"
-					/>
+					/> -->
 				</div>
 				<h3 style="font-size: 30rpx; font-weight: 700">香氛开关</h3>
 			</div>
-			<div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex justify-between">
-				<div class="flex flex-col justify-between items-center">
+			<div class="w-320rpx h-230rpx bg-white rounded-16rpx pl-32rpx pr-10rpx py-14rpx box-border flex justify-between">
+				<div class="flex flex-col justify-between items-center py-20rpx">
 					<div
 						class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
 						style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
 					>
-						<img :src="qiehuan" style="width: 32rpx; height: 32rpx"/>
+						<img :src="qiehuan" style="width: 32rpx; height: 32rpx" />
 					</div>
-					<h3 style="font-size: 30rpx; font-weight: 700">香氛切换</h3>
+					<h3 style="font-weight: 700" class="text-30rpx">香氛切换</h3>
 				</div>
 				<div class="flex flex-col justify-between">
 					<div
-						class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
-						style="font-size: 22rpx; color: #ffffff"
+						class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
 						@click="qiehuanHandler(1)"
 					>
 						香氛A
 					</div>
 					<div
-						class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx mb-12rpx leading-40rpx"
-						style="font-size: 22rpx; color: #ffffff"
+						class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
 						@click="qiehuanHandler(2)"
 					>
 						香氛B
 					</div>
 					<div
-						class="w-98rpx h-40rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx"
-						style="font-size: 22rpx; color: #ffffff"
+						class="w-126rpx h-51rpx bg-#008EE5 text-center rounded-40rpx leading-40rpx text-28rpx text-white flex-center"
 						@click="qiehuanHandler(3)"
 					>
 						香氛C
@@ -140,63 +146,62 @@
 			</div>
 		</div>
 		<div class="flex w-670rpx justify-between mt-40rpx">
-			<div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex flex-col justify-between">
+			<div
+				class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx pt-10rpx pr-16rpx box-border flex flex-col justify-between"
+			>
 				<div class="flex justify-between items-center">
 					<div
 						class="w-80rpx h-80rpx rounded-full flex justify-center items-center"
 						style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
 					>
-						<img :src="denglizi" style="width: 30rpx; height: 39rpx"/>
+						<img :src="denglizi" style="width: 30rpx; height: 39rpx" />
 					</div>
-					<nut-switch
+					<img
+						v-if="denglizikaiguanchecked"
+						:src="btnOn"
+						style="width: 126rpx; height: 126rpx"
+						@click="dengliziChange(false)"
+					/>
+					<img v-else :src="btnOff" style="width: 126rpx; height: 126rpx" @click="dengliziChange(true)" />
+					<!-- <nut-switch
 						:model-value="denglizikaiguanchecked"
 						active-text="ON"
 						inactive-text="OFF"
 						@change="dengliziChange"
-					/>
+					/> -->
 				</div>
 				<h3 style="font-size: 30rpx; font-weight: 700">等离子开关</h3>
 			</div>
-			<div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx box-border flex justify-between">
-				<div class="flex flex-col justify-between items-center">
+			<div class="w-320rpx h-230rpx bg-white rounded-16rpx p-32rpx pb-4rpx pr-24rpx box-border flex justify-between">
+				<div class="flex flex-col justify-between items-center pb-28rpx">
 					<div
 						class="w-80rpx h-80rpx rounded-full flex justify-center items-center self-start"
 						style="background: linear-gradient(180deg, #e8eaf7 -11.25%, rgba(232, 234, 247, 0) 100%)"
 					>
-						<img :src="shezhi" style="width: 24rpx; height: 30rpx"/>
+						<img :src="shezhi" style="width: 24rpx; height: 30rpx" />
 					</div>
-					<h3 style="font-size: 30rpx; font-weight: 700">香氛设置</h3>
+					<h3 style="font-weight: 700" class="text-30rpx mb-28rpx">香氛设置</h3>
 				</div>
 				<div class="flex flex-col justify-between items-end">
 					<div
-						class="w-46rpx h-46rpx rounded-full flex justify-center items-center mb-12rpx"
+						class="w-76rpx h-76rpx rounded-full flex justify-center items-center mb-12rpx"
 						style="box-shadow: 0 5rpx 30rpx 0 rgba(0, 142, 229, 0.2)"
 					>
-						<img :src="shezhiIcon" style="width: 29rpx; height: 29rpx"/>
+						<img :src="shezhiIcon" style="width: 42rpx; height: 42rpx" />
 					</div>
 					<div
-						v-if="!chixuSwitch"
 						class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
 						style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-						@click="showchixu = true"
+						@click="showchixu = false"
 					>
 						每隔一秒
 					</div>
 					<div
-						v-if="!chixuSwitch"
 						class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
 						style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-						@click="showchixu = true"
+						@click="showchixu = false"
 					>
 						工作一秒
-					</div>
-					<div
-						v-if="chixuSwitch"
-						class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
-						style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
-						@click="showchixu = true"
-					>
-						持续工作
 					</div>
 				</div>
 			</div>
@@ -204,17 +209,17 @@
 		<div class="w-750rpx h-140rpx"></div>
 		<div class="box-shadow fixed w-750rpx h-60px bg-white bottom-0 flex items-center">
 			<div class="flex flex-1 justify-center items-center" @click="handleToAbout">
-				<img :src="guanyu" style="width: 42rpx; height: 42rpx"/>
+				<img :src="guanyu" style="width: 42rpx; height: 42rpx" />
 				<span class="ml-9px">关于我们</span>
 			</div>
 			<div class="w-2px h-32rpx bg-black rounded-2px"></div>
 			<div class="flex flex-1 justify-center items-center" @click="handleToConnect">
-				<img :src="lianxi" style="width: 42rpx; height: 42rpx"/>
+				<img :src="lianxi" style="width: 42rpx; height: 42rpx" />
 				<span class="ml-9px">联系方式</span>
 			</div>
 		</div>
 	</div>
-	<nut-dialog v-model:visible="bleNotWorkDialog" :title="dialogTitle" :content="dialogContent" no-cancel-btn/>
+	<nut-dialog v-model:visible="bleNotWorkDialog" :title="dialogTitle" :content="dialogContent" no-cancel-btn />
 	<nut-popup position="bottom" :style="{ height: '41%' }" v-model:visible="showchixu" :z-index="100" :round="true">
 		<div
 			style="display: flex; justify-content: space-between; align-items: center; margin-top: 32rpx; padding: 0 44rpx">
@@ -271,6 +276,8 @@ import shezhi from '../../assets/images/shezhi.png';
 import shezhiIcon from '../../assets/images/shezhiIcon.png';
 import selected from '../../assets/images/selected.png';
 import unselect from '../../assets/images/unselect.png';
+import btnOn from '../../assets/images/btnOn.png';
+import btnOff from '../../assets/images/btnOff.png';
 
 // chixu
 const chixuSwitch = ref(false)
