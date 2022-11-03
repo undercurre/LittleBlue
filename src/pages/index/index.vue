@@ -180,16 +180,15 @@
           >
             <img :src="shezhiIcon" style="width: 42rpx; height: 42rpx" />
           </div>
+          <!--          <div-->
+          <!--            v-if="chixuSwitch"-->
+          <!--            class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"-->
+          <!--            style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a; margin-bottom: 20rpx"-->
+          <!--            @click="showchixu = true"-->
+          <!--          >-->
+          <!--            持续工作-->
+          <!--          </div>-->
           <div
-            v-if="chixuSwitch"
-            class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
-            style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a; margin-bottom: 20rpx"
-            @click="showchixu = true"
-          >
-            持续工作
-          </div>
-          <div
-            v-if="!chixuSwitch"
             class="w-98rpx h-40rpx text-center rounded-40rpx mb-12rpx leading-40rpx"
             style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
             @click="showchixu = true"
@@ -197,7 +196,6 @@
             每隔{{ meige[0] }}秒
           </div>
           <div
-            v-if="!chixuSwitch"
             class="w-98rpx h-40rpx text-center rounded-40rpx leading-40rpx"
             style="border: 2px solid #37adf5; font-size: 18rpx; color: #1a1a1a"
             @click="showchixu = true"
@@ -235,18 +233,6 @@
     </div>
     <div style="display: flex; flex-direction: column; padding-left: 93rpx">
       <div style="display: flex; align-items: center; margin-bottom: 40rpx">
-        <img
-          v-if="!chixuSwitch"
-          :src="selected"
-          style="width: 28rpx; height: 28rpx; margin-right: 37rpx; margin-bottom: 30rpx"
-          @click="chixuSwitch = !chixuSwitch"
-        />
-        <img
-          v-if="chixuSwitch"
-          :src="unselect"
-          style="width: 28rpx; height: 28rpx; margin-right: 37rpx; margin-bottom: 30rpx"
-          @click="chixuSwitch = !chixuSwitch"
-        />
         <span style="font-size: 14px; margin-bottom: 30rpx">每隔</span>
         <picker-view
           indicator-style="height: 30px;"
@@ -288,11 +274,6 @@
         </picker-view>
         <span style="font-size: 14px; margin-bottom: 30rpx">秒</span>
       </div>
-      <div style="display: flex; align-items: center" @click="chixuSwitch = !chixuSwitch">
-        <img v-if="chixuSwitch" :src="selected" style="width: 28rpx; height: 28rpx; margin-right: 37rpx" />
-        <img v-if="!chixuSwitch" :src="unselect" style="width: 28rpx; height: 28rpx; margin-right: 37rpx" />
-        <span style="font-size: 14px">持续工作</span>
-      </div>
     </div>
     <div style="display: flex; padding: 50rpx 20rpx; justify-content: space-between">
       <nut-button style="width: 322rpx" type="default" @click="showchixu = false">取消</nut-button
@@ -322,13 +303,13 @@ import denglizi from '../../assets/images/denglizi.png';
 import qiehuan from '../../assets/images/qiehuan.png';
 import shezhi from '../../assets/images/shezhi.png';
 import shezhiIcon from '../../assets/images/shezhiIcon.png';
-import selected from '../../assets/images/selected.png';
-import unselect from '../../assets/images/unselect.png';
+// import selected from '../../assets/images/selected.png';
+// import unselect from '../../assets/images/unselect.png';
 import btnOn from '../../assets/images/btnOn.png';
 import btnOff from '../../assets/images/btnOff.png';
 
 // chixu
-const chixuSwitch = ref(false);
+// const chixuSwitch = ref(false);
 const showchixu = ref(false);
 const meige = ref([0]);
 const gongzuo = ref([0]);
