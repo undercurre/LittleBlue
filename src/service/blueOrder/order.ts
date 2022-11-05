@@ -27,6 +27,9 @@ export function setOrderType(type: string, arr: string[]) {
     case 'fuwei':
       arr[0] = '0xF9';
       break;
+    case 'chaxun':
+      arr[0] = '0xFD';
+      break;
     default:
       break;
   }
@@ -70,6 +73,11 @@ export function setOrderValue(type: string, value: number | boolean, arr: string
   // 复位
   if (type === 'fuwei') {
     const temp = 85;
+    arr[1] = temp.toString(16);
+  }
+  // 查询
+  if (type === 'chaxun') {
+    const temp = 253;
     arr[1] = temp.toString(16);
   }
 }

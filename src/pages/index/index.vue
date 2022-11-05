@@ -394,6 +394,10 @@ watchEffect(() => {
         });
       }
     });
+    // 一秒后查询一次数据，怕监听没打开
+    setTimeout(() => {
+      handlechaxun();
+    }, 1000);
     // 监听蓝牙断开的事件
     Taro.onBLEConnectionStateChange(res => {
       if (!res.connected) {
@@ -469,6 +473,24 @@ async function handleToBluetooth() {
   }
   navigateTo({
     url: '/package/bluetoothConnect/index'
+  });
+}
+
+function handlechaxun() {
+  if (!openBLENotConnectDialogIfNotConnect()) return;
+  const order = getHexOrder('chaxun', 253);
+  Taro.writeBLECharacteristicValue({
+    // 这里的 deviceId 需要在 getBluetoothDevices 或 onBluetoothDeviceFound 接口中获取
+    deviceId,
+    // 这里的 serviceId 需要在 getBLEDeviceServices 接口中获取
+    serviceId,
+    // 这里的 characteristicId 需要在 getBLEDeviceCharacteristics 接口中获取
+    characteristicId,
+    // 这里的value是ArrayBuffer类型
+    value: order,
+    success(res) {
+      console.log('writeBLECharacteristicValue success', res.errMsg);
+    }
   });
 }
 
